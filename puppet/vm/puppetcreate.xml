@@ -1,0 +1,28 @@
+/tmp/puppetcreate.xml 
+<?xml version="1.0"?>
+<Virtual-Machines>
+         <Virtual-Machine>
+            <Name>labm_%nr</Name>
+                <Host>esx.hem.sennerholm.net</Host>
+                <Datacenter>ha-datacenter</Datacenter>
+                <Guest-Id>ubuntu64guest</Guest-Id>
+                <Datastore>local-Raid5-2</Datastore>
+                <Disksize>4194304</Disksize>
+                <Memory>1024</Memory>
+                <Number-of-Processor>1</Number-of-Processor>
+                <Nic-Network>PuppetDeploy</Nic-Network>
+                <Nic-Poweron>1</Nic-Poweron>
+         </Virtual-Machine>
+         <Virtual-Machine>
+            <Name>labs_%nr</Name>
+                <Host>esx.hem.sennerholm.net</Host>
+                <Datacenter>ha-datacenter</Datacenter>
+                <Guest-Id>ubuntu64Guest</Guest-Id>
+                <Datastore>local-Raid5-3</Datastore>
+                <Disksize>3145728</Disksize>
+                <Memory>900</Memory>
+                <Number-of-Processor>1</Number-of-Processor>
+                <Nic-Network>PuppetDeploy</Nic-Network>
+                <Nic-Poweron>1</Nic-Poweron>
+         </Virtual-Machine>
+</Virtual-Machines>
