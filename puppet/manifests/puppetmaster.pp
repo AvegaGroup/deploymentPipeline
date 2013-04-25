@@ -41,9 +41,21 @@ service { 'puppetmaster':
 # puppet module install saz-dnsmasq
   dnsmasq::conf { '129-ci':
     ensure  => present,
-    content => "dhcp-range=192.168.129.10,192.168.129.99,12h\ndhcp-boot=pxelinux.0\ndhcp-option=3,192.168.129.1\ndhcp-option=6,192.168.129.1\ndomain=hem.sennerholm.net\nexpand-hosts\ndhcp-host=puppetmaster,192.168.129.1\interface=eth2\n",
+    content => "dhcp-range=192.168.129.10,192.168.129.99,12h\ndhcp-boot=pxelinux.0\ndhcp-option=3,192.168.129.1\ndhcp-option=6,192.168.129.1\ndomain=dp.sennerholm.net\nexpand-hosts\ndhcp-host=puppetmaster,192.168.129.1\interface=eth2\n",
+  }
+  dnsmasq::conf { '130-test':
+    ensure  => present,
+    content => "dhcp-range=192.168.130.10,192.168.130.99,12h\ndhcp-boot=pxelinux.0\ndhcp-option=3,192.168.130.1\ndhcp-option=6,192.168.130.1\ndomain=dp.sennerholm.net\nexpand-hosts\ndhcp-host=puppetmaster,192.168.130.1\interface=eth2\n",
 
   }
+
+  dnsmasq::conf { '131-prod':
+    ensure  => present,
+    content => "dhcp-range=192.168.131.10,192.168.131.99,12h\ndhcp-boot=pxelinux.0\ndhcp-option=3,192.168.131.1\ndhcp-option=6,192.168.131.1\ndomain=dp.sennerholm.net\nexpand-hosts\ndhcp-host=puppetmaster,192.168.131.1\interface=eth2\n",
+
+  }
+
+
 
   rz_image { 'precise_image':
     ensure  => 'present',
