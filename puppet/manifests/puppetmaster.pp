@@ -76,8 +76,10 @@ service { 'puppetmaster':
     version => '12.04',
     source  => '/root/ubuntu-12.04.2-server-amd64.iso',
   }
+
+# Temporary
  rz_model { 'precise_model':
-   ensure      => present,
+   ensure      => absent,
    description => 'Ubuntu Precise Model',
    image       => 'precise_image',
    metadata    => {
@@ -89,6 +91,7 @@ service { 'puppetmaster':
  }
 
 rz_tag { 'virtual':
+  ensure   => 'absent',
   tag_label   => 'virtual',
   tag_matcher => [
     { 'key'     => 'is_virtual',
@@ -99,12 +102,20 @@ rz_tag { 'virtual':
 }
 
 rz_policy { 'precise_policy':
-  ensure   => 'present',
+  ensure   => 'absent',
   broker   => 'none',
   model    => 'precise_model',
   enabled  => 'true',
   tags     => ['virtual'],
   template => 'linux_deploy',
   maximum  => 1,
+}
+# End of Temp	
+rz_broker { 'puppetmaster':
+  plugin  => 'puppet',
+  metadata => {
+    server  => 'puppetmaster.hem.sennerholm.net',
+  }
+
 }
 }
