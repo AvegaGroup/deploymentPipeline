@@ -1,7 +1,7 @@
 service { 'puppetmaster':
     ensure => 'running',
     enable => 'true',
-  }
+}
 
   # Firewall https://forge.puppetlabs.com/puppetlabs/firewall
   firewall { '100 Dont nat to client network':
@@ -35,7 +35,7 @@ service { 'puppetmaster':
 # Shouldn't be needed.
 # puppet apply /etc/puppet/modules/razor/tests/init.pp --verbose
 # Change according to https://github.com/puppetlabs/puppetlabs-razor/commit/f69c03d localy with v0.6.1
-  include razor
+#  include razor
 
 # Require
 # puppet module install saz-dnsmasq
