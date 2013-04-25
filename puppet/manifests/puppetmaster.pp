@@ -52,20 +52,31 @@ service { 'puppetmaster':
 
 # Require
 # puppet module install saz-dnsmasq
-  dnsmasq::conf { '129-ci':
+  dnsmasq::conf { '1-razor':
     ensure  => present,
-    content => "dhcp-range=192.168.129.10,192.168.129.99,12h\ndhcp-boot=pxelinux.0\ndhcp-option=3,192.168.129.1\ndhcp-option=6,192.168.129.1\ndomain=dp.sennerholm.net\nexpand-hosts\ndhcp-host=puppetmaster,192.168.129.1\interface=eth2\n",
-  }
-  dnsmasq::conf { '130-test':
-    ensure  => present,
-    content => "dhcp-range=192.168.130.10,192.168.130.99,12h\ndhcp-boot=pxelinux.0\ndhcp-option=3,192.168.130.1\ndhcp-option=6,192.168.130.1\ndomain=dp.sennerholm.net\nexpand-hosts\ndhcp-host=puppetmaster,192.168.130.1\interface=eth2\n",
-
+    content => "dhcp-boot=tag:!client,pxelinux.0\ndomain=dp.sennerholm.net\nexpand-hosts\nexcept-interface=eth0",
   }
 
-  dnsmasq::conf { '131-prod':
+  dnsmasq::conf { 'eth2-128-client':
     ensure  => present,
-    content => "dhcp-range=192.168.131.10,192.168.131.99,12h\ndhcp-boot=pxelinux.0\ndhcp-option=3,192.168.131.1\ndhcp-option=6,192.168.131.1\ndomain=dp.sennerholm.net\nexpand-hosts\ndhcp-host=puppetmaster,192.168.131.1\interface=eth2\n",
+    content => "dhcp-range=interface:eth2,set:client,192.168.128.10,192.168.128.99,12h\ndhcp-option=tag:ci,3,192.168.128.1,\ndhcp-option=tag:ci,6,192.168.128.1\n",
+  }
 
+
+  dnsmasq::conf { 'eth2-129-ci':
+    ensure  => present,
+    content => "dhcp-range=interface:eth3,set:ci,192.168.129.10,192.168.129.99,12h\ndhcp-option=tag:ci,3,192.168.129.1,\ndhcp-option=tag:ci,6,192.168.129.1\n",
+  }
+
+  dnsmasq::conf { 'eth3-130-test':
+    ensure  => present,
+    content => "dhcp-range=interface:eth3,set:test,192.168.130.10,192.168.130.99,12h\ndhcp-option=tag:test,3,192.168.130.1,\ndhcp-option=tag:test,6,192.168.130.1\n",
+
+  }
+
+  dnsmasq::conf { 'eth4-131-prod':
+    ensure  => present,
+    content => "dhcp-range=interface:eth4,set:prod,192.168.131.10,192.168.131.99,12h\ndhcp-option=tag:prod,3,192.168.131.1,\ndhcp-option=tag:prod,6,192.168.131.1\n",
   }
 
 
@@ -78,14 +89,14 @@ service { 'puppetmaster':
   }
 
 # Temporary
- rz_model { 'precise_model':
-   ensure      => absent,
-   description => 'Ubuntu Precise Model',
+ rz_model { 'cdtest':
+   ensure      => present,
+   description => 'Test vm for Continius Deployment lab',
    image       => 'precise_image',
    metadata    => {
-     'domainname'      => 'puppetlabs.lan',
-     'hostname_prefix' => 'openstack',
-     'rootpassword'    => 'puppet',
+     'domainname'      => 'dp.sennerholm.net',
+     'hostname_prefix' => 'test',
+     'rootpassword'    => 'test1234',
    },
    template    => 'ubuntu_precise',
  }
