@@ -21,18 +21,5 @@ node default inherits basenode {
 }
 
 
+import "puppetmaster.pp"
 
-node puppetmaster inherits basenode {
-
-# Razor:
-# http://forge.puppetlabs.com/puppetlabs/razor
-# Require:
-# puppet module install puppetlabs-razor
-# Shouldn't be needed.
-# puppet apply /etc/puppet/modules/razor/tests/init.pp --verbose
-# Change according to https://github.com/puppetlabs/puppetlabs-razor/commit/f69c03d localy with v0.6.1
-  include razor
-
-  import "puppetmaster.pp"
- 
-}
