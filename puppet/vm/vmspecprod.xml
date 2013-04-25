@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Virtual-Machines>
          <Virtual-Machine>
-            <Name>labprod_%nr</Name>
+            <Name>cdprod_%nr</Name>
                 <Host>esx.hem.sennerholm.net</Host>
                 <Datacenter>ha-datacenter</Datacenter>
                 <Guest-Id>ubuntu64guest</Guest-Id>
@@ -9,7 +9,7 @@
                 <Disksize>16777216</Disksize>
                 <Memory>3072</Memory>
                 <Number-of-Processor>2</Number-of-Processor>
-                <Nic-Network>PuppetDeploy</Nic-Network>
+                <Nic-Network>CDProd131</Nic-Network>
                 <Nic-Poweron>1</Nic-Poweron>
          </Virtual-Machine>
 </Virtual-Machines>
