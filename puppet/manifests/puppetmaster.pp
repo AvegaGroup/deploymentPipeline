@@ -101,6 +101,38 @@ service { 'puppetmaster':
    template    => 'ubuntu_precise',
  }
 
+rz_tag { 'oncinetwork':
+  ensure   => 'present',
+  tag_label   => 'oncinetwork',
+  tag_matcher => [
+    { 'key'     => 'network_eth0',
+      'compare' => 'equal',
+      'value'   => '192.168.129.0',
+      'inverse' => false, }
+  ],
+}
+rz_tag { 'ontestnetwork':
+  ensure   => 'present',
+  tag_label   => 'ontestnetwork',
+  tag_matcher => [
+    { 'key'     => 'network_eth0',
+      'compare' => 'equal',
+      'value'   => '192.168.130.0',
+      'inverse' => false, }
+  ],
+}
+
+rz_tag { 'onprodnetwork':
+  ensure   => 'present',
+  tag_label   => 'onprodnetwork',
+  tag_matcher => [
+    { 'key'     => 'network_eth0',
+      'compare' => 'equal',
+      'value'   => '192.168.131.0',
+      'inverse' => false, }
+  ],
+}
+
 rz_tag { 'virtual':
   ensure   => 'absent',
   tag_label   => 'virtual',
