@@ -7,7 +7,7 @@ sudo apt-get update
 MODULE_DIR=/etc/puppet/modules
 [ ! -d $MODULE_DIR ] && mkdir -p $MODULE_DIR
 
-[ ! -d $MODULE_DIR/alternatives ] && puppet module install adrien/alternatives
+[ ! -d $MODULE_DIR/apt ] && puppet module install puppetlabs/apt
 [ ! -d $MODULE_DIR/jenkins ] && puppet module install rtyler/jenkins
 
 exit 0
