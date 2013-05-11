@@ -4,6 +4,7 @@
 include "jdk7"
 include "maven3"
 include "jenkins"
+include "artifactory"
 
 jenkins::plugin {
   "git": ;
