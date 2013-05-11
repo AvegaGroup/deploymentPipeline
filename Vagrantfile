@@ -38,4 +38,68 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  config.vm.define :test do |cfg|
+    cfg.vm.box = "precise64"
+
+    cfg.vm.hostname = "devtest1"
+
+    # Tomcat
+    cfg.vm.network :forwarded_port, guest: 8080, host: 18090
+
+    # Create a private network, which allows host-only access to the machine
+    # using a specific IP.
+    cfg.vm.network :private_network, ip: "192.168.10.20"
+
+    # Provision puppet modules
+    cfg.vm.provision :shell, :path => "puppet/install-modules.sh"
+
+    # Puppet provisioning
+    cfg.vm.provision :puppet do |puppet|
+      puppet.manifests_path = "puppet/manifests"
+      puppet.module_path = "puppet/modules"
+      puppet.manifest_file = "test.pp"
+    end
+
+    # Provider-specific configuration for VirtualBox:
+    cfg.vm.provider :virtualbox do |vb|
+      # Use VBoxManage to customize the VM. For example to change memory:
+      vb.customize ["modifyvm", :id, "--memory", "512"]
+      # Fix for problem with NAT-DNS in fault version of VirtualBox at Ubuntu 12.10
+      # see https://www.virtualbox.org/ticket/10864
+      vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    end
+  end
+
+  config.vm.define :prod do |cfg|
+    cfg.vm.box = "precise64"
+
+    cfg.vm.hostname = "devprod1"
+
+    # Tomcat
+    cfg.vm.network :forwarded_port, guest: 8080, host: 18100
+
+    # Create a private network, which allows host-only access to the machine
+    # using a specific IP.
+    cfg.vm.network :private_network, ip: "192.168.10.30"
+
+    # Provision puppet modules
+    cfg.vm.provision :shell, :path => "puppet/install-modules.sh"
+
+    # Puppet provisioning
+    cfg.vm.provision :puppet do |puppet|
+      puppet.manifests_path = "puppet/manifests"
+      puppet.module_path = "puppet/modules"
+      puppet.manifest_file = "prod.pp"
+    end
+
+    # Provider-specific configuration for VirtualBox:
+    cfg.vm.provider :virtualbox do |vb|
+      # Use VBoxManage to customize the VM. For example to change memory:
+      vb.customize ["modifyvm", :id, "--memory", "512"]
+      # Fix for problem with NAT-DNS in fault version of VirtualBox at Ubuntu 12.10
+      # see https://www.virtualbox.org/ticket/10864
+      vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    end
+  end
+
 end
