@@ -1,6 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+include "jdk7"
 include "jenkins"
 
 jenkins::plugin {
