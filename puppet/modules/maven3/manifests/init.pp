@@ -10,4 +10,11 @@ class maven3 {
       provider => 'apt',
       require => Apt::Ppa['ppa:natecarlson/maven3']
     }
+# copy a remote file to /etc/sudoers
+    file { "/usr/share/maven3/conf/settings.xml":
+      mode => 440,
+      owner => root,
+      group => root,
+      source => "puppet:///modules/maven3/settings.xml"
+    }
 }
