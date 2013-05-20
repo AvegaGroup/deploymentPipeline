@@ -20,7 +20,7 @@ user { "mikan":
   gid        => mikan,
   managehome => true,
   groups     => [admin,devel],
-  password   => '$6$yEqVT616$XKbVt6kPlJbHm0KOe59YIzY4bc.erzNAqFOeSu0hONp76MxHwhrxlHiKWUJRsQxKT58lyAXhnyhzgukov/Hqr0/'
+  password   => '$6$701V7V8c$qh3oAdvtaRykkBDMeZQYJEUJ/RFRpEF2G0WXOdIcH4ZW1OQi6IGEbS6..bosxrz06hgyDTQ9iNphBE/LT9D64/'
 }
 
 group { "jelmstrom":
