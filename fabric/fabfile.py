@@ -41,11 +41,11 @@ def deploy_petclinic(build_number='61'):
     repo_war = repo_url % { "version_number" : version_number, "artefact_name" : artefact_war }
     repo_smoke = repo_url % { "version_number" : version_number, "artefact_name" : artefact_smoke }
 
-    local_war = "/tmp/%s/petclinic.war" % build_number
-    local_smoke = "/tmp/%s/smoketest.zip" % build_number
+    local_war = "/tmp/deploy-%s/petclinic.war" % build_number
+    local_smoke = "/tmp/deploy-%s/smoketest.zip" % build_number
 
     remote_war = "/var/lib/tomcat7/webapps/petclinic.war"
-    remote_smoke = "/tmp/%s/smoketest.zip" % build_number
+    remote_smoke = "/tmp/deploy-%s/smoketest.zip" % build_number
 
     # creating local and remote temp directories
     local("mkdir /tmp/deploy-%s" % build_number)
@@ -72,8 +72,8 @@ def deploy_petclinic(build_number='61'):
     waitForTomcatToStart()
 
     # run smoke test
-    remote_smoke_bin = '/tmp/%s/%s/%s' % (build_number, artefact_base_name, "smoketest.sh")
-    run('unzip %s -d /tmp/%s' % (remote_smoke, build_number))
+    remote_smoke_bin = '/tmp/deploy-%s/%s/%s' % (build_number, artefact_base_name, "smoketest.sh")
+    run('unzip %s -d /tmp/deploy-%s' % (remote_smoke, build_number))
     run(remote_smoke_bin)
 
 
