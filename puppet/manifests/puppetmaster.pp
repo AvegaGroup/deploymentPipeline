@@ -1,4 +1,8 @@
 node puppetmaster inherits basenode {
+# För in i install-modules.sh
+#  ! -d $MODULE_DIR/apt ] && puppet module install puppetlabs/apt
+#[ ! -d $MODULE_DIR/jenkins ] && puppet module install rtyler/jenkins
+
 
 # Razor:
 # http://forge.puppetlabs.com/puppetlabs/razor
@@ -199,7 +203,7 @@ rz_policy { 'install_prod':
   enabled  => 'true',
   tags     => ['virtual','onprodnetwork'],
   template => 'linux_deploy',
-  maximum  => 2,
+  maximum  => 4,
 }
 rz_policy { 'install_ci':
   ensure   => 'present',
@@ -208,7 +212,7 @@ rz_policy { 'install_ci':
   enabled  => 'true',
   tags     => ['virtual','oncinetwork'],
   template => 'linux_deploy',
-  maximum  => 2,
+  maximum  => 4,
 }
 
 }
