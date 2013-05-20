@@ -19,7 +19,8 @@ service { 'puppetmaster':
   # Firewall https://forge.puppetlabs.com/puppetlabs/firewall
   firewall { '100 Dont nat to client network':
      chain    => 'POSTROUTING',
-     action     => 'accept',
+  #   action     => 'accept',
+     jump     => 'MASQUERADE',
      proto    => 'all',
      destination => '192.168.155.0/24',
      source   => '192.168.128.0/22',
@@ -31,11 +32,11 @@ service { 'puppetmaster':
     jump     => 'MASQUERADE',
     proto    => 'all',
     outiface => "eth0",
-    source   => '192.168.17.0/24',
+    source   => '192.168.128.0/22',
     table    => 'nat',
   }
   # And now forward packages: 
-    file { "/etc/sysctl.d/60-ip_forward":
+    file { "/etc/sysctl.d/60-ip_forward.conf":
       content => "net.ipv4.ip_forward = 1\n",
       ensure  => present,
     }
@@ -57,27 +58,32 @@ service { 'puppetmaster':
     content => "dhcp-boot=tag:!client,pxelinux.0\ndomain=dp.sennerholm.net\nexpand-hosts\nexcept-interface=eth0",
   }
 
-  dnsmasq::conf { 'eth2-128-client':
+  dnsmasq::conf { 'eth1-128-client':
     ensure  => present,
-    content => "dhcp-range=interface:eth2,set:client,192.168.128.10,192.168.128.99,12h\ndhcp-option=tag:ci,3,192.168.128.1,\ndhcp-option=tag:ci,6,192.168.128.1\n",
+    content => "dhcp-range=interface:eth1,set:client,192.168.128.10,192.168.128.99,12h\ndhcp-option=tag:client,3,192.168.128.1,\ndhcp-option=tag:client,6,192.168.128.1\n",
   }
 
 
   dnsmasq::conf { 'eth2-129-ci':
     ensure  => present,
-    content => "dhcp-range=interface:eth3,set:ci,192.168.129.10,192.168.129.99,12h\ndhcp-option=tag:ci,3,192.168.129.1,\ndhcp-option=tag:ci,6,192.168.129.1\n",
+    content => "dhcp-range=interface:eth2,set:ci,192.168.129.10,192.168.129.110,12h\ndhcp-option=tag:ci,3,192.168.129.1\ndhcp-option=tag:ci,6,192.168.129.1\n",
   }
 
   dnsmasq::conf { 'eth3-130-test':
     ensure  => present,
-    content => "dhcp-range=interface:eth3,set:test,192.168.130.10,192.168.130.99,12h\ndhcp-option=tag:test,3,192.168.130.1,\ndhcp-option=tag:test,6,192.168.130.1\n",
-
+    content => "dhcp-range=interface:eth3,set:test,192.168.130.10,192.168.130.99,12h\ndhcp-option=tag:test,3,192.168.130.1\ndhcp-option=tag:test,6,192.168.130.1\n",
   }
 
   dnsmasq::conf { 'eth4-131-prod':
     ensure  => present,
-    content => "dhcp-range=interface:eth4,set:prod,192.168.131.10,192.168.131.99,12h\ndhcp-option=tag:prod,3,192.168.131.1,\ndhcp-option=tag:prod,6,192.168.131.1\n",
+    content => "dhcp-range=interface:eth4,set:prod,192.168.131.10,192.168.131.99,12h\ndhcp-option=tag:prod,3,192.168.131.1\ndhcp-option=tag:prod,6,192.168.131.1\n",
   }
+
+# dnsmasq::conf { 'hem.sennerholm.net':
+#    ensure  => absent,
+#    content => "dhcp-range=192.168.17.10,192.168.17.99,12h\ndhcp-boot=pxelinux.0\ndhcp-option=3,192.168.17.1\ndhcp#-option=6,192.168.17.1\ndomain=hem.sennerholm.net\nexpand-hosts\ndhcp-host=puppetmaster,192.168.17.1\nexcept-inter#face=eth0\n",
+#
+#  }
 
 
 
@@ -88,10 +94,10 @@ service { 'puppetmaster':
     source  => '/root/ubuntu-12.04.2-server-amd64.iso',
   }
 
-# Temporary
- rz_model { 'cdtest':
+rz_model { 'cdtest':
    ensure      => present,
-   description => 'Test vm for Continius Deployment lab',
+#   description => 'Test vm for Continius Deployment lab',
+   description => 'Ubuntu Precise Model',
    image       => 'precise_image',
    metadata    => {
      'domainname'      => 'dp.sennerholm.net',
@@ -100,6 +106,31 @@ service { 'puppetmaster':
    },
    template    => 'ubuntu_precise',
  }
+
+rz_model { 'cdprod':
+   ensure      => present,
+   description => 'Ubuntu Precise Model',
+   image       => 'precise_image',
+   metadata    => {
+     'domainname'      => 'dp.sennerholm.net',
+     'hostname_prefix' => 'prod',
+     'rootpassword'    => 'test1234',
+   },
+   template    => 'ubuntu_precise',
+ }
+
+rz_model { 'cdci':
+   ensure      => present,
+   description => 'Ubuntu Precise Model',
+   image       => 'precise_image',
+   metadata    => {
+     'domainname'      => 'dp.sennerholm.net',
+     'hostname_prefix' => 'ci',
+     'rootpassword'    => 'test1234',
+   },
+   template    => 'ubuntu_precise',
+ }
+
 
 rz_tag { 'oncinetwork':
   ensure   => 'present',
@@ -134,7 +165,7 @@ rz_tag { 'onprodnetwork':
 }
 
 rz_tag { 'virtual':
-  ensure   => 'absent',
+  ensure   => 'present',
   tag_label   => 'virtual',
   tag_matcher => [
     { 'key'     => 'is_virtual',
@@ -144,21 +175,40 @@ rz_tag { 'virtual':
   ],
 }
 
-rz_policy { 'precise_policy':
-  ensure   => 'absent',
-  broker   => 'none',
-  model    => 'precise_model',
-  enabled  => 'true',
-  tags     => ['virtual'],
-  template => 'linux_deploy',
-  maximum  => 1,
-}
-# End of Temp	
 rz_broker { 'puppetmaster':
+  ensure   => 'present',
   plugin  => 'puppet',
   metadata => {
     server  => 'puppetmaster.hem.sennerholm.net',
   }
-
 }
+
+rz_policy { 'install_test':
+  ensure   => 'present',
+  broker   => 'puppetmaster',
+  model    => 'cdtest',
+  enabled  => 'true',
+  tags     => ['virtual','ontestnetwork'],
+  template => 'linux_deploy',
+  maximum  => 1,
+}
+rz_policy { 'install_prod':
+  ensure   => 'present',
+  broker   => 'puppetmaster',
+  model    => 'cdprod',
+  enabled  => 'true',
+  tags     => ['virtual','onprodnetwork'],
+  template => 'linux_deploy',
+  maximum  => 2,
+}
+rz_policy { 'install_ci':
+  ensure   => 'present',
+  broker   => 'puppetmaster',
+  model    => 'cdci',
+  enabled  => 'true',
+  tags     => ['virtual','oncinetwork'],
+  template => 'linux_deploy',
+  maximum  => 2,
+}
+
 }
