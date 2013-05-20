@@ -43,7 +43,9 @@ node /ci/ inherits basenode {
   }
 
   jenkins::plugin {
+    "git-client": ;
     "git": ;
+    "github-api": ;
     "github": ;
     "artifactory": ;
     "build-pipeline-plugin": ;
