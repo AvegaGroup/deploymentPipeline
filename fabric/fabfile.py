@@ -20,10 +20,18 @@ def host_type():
     run('uname -s')
     run('hostname -f')
 
+
+def get_version_number(build_number):
+    file_name = "/tmp/%s/version.txt" % build_number
+    for line in open(file_name).readlines():
+	if "maven.version" in line:
+	    return line.split('=')[1].strip()
+	raise "Failed to parse maven.version from " + file_name
+
 @task
 def deploy_petclinic(build_number='61'):
     run('echo deploying pet clinic')
-    version_number = '1.0.61'
+    version_number = get_version_number(build_number)
 
     artefact_base_name = "spring-petclinic-" + version_number 
     artefact_smoke = "spring-petclinic-" + version_number + "-smoketest.zip"
@@ -40,8 +48,8 @@ def deploy_petclinic(build_number='61'):
     remote_smoke = "/tmp/%s/smoketest.zip" % build_number
 
     # creating local and remote temp directories
-    local("mkdir /tmp/%s" % build_number)
-    run("mkdir /tmp/%s" % build_number)
+    local("mkdir /tmp/deploy-%s" % build_number)
+    run("mkdir /tmp/deploy-%s" % build_number)
 
     # download artefacts
     run('echo Downloading artefacts')
