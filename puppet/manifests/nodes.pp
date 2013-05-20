@@ -21,42 +21,57 @@ node default inherits basenode {
 }
 
 node /prod/ inherits basenode {
-  package { 'mysql-server' :
-    ensure  => present,
-    provider=> 'apt'
-  }
-  package { 'openjdk-7-jre' :
-    ensure  => present,
-    provider=> 'apt'
-  }
-  package { 'openjdk-6-jre-headless' :
-    ensure  => purged,
-    provider=> 'apt'
-  } 
-  
-  package { 'tomcat7' :
-    ensure  => present,
-    provider=> 'apt'
-  }
+include "jre7"
+
+package { 'mysql-server' :
+  ensure  => present,
+  provider=> 'apt'
 }
 
+package { 'tomcat7' :
+  ensure  => present,
+  provider=> 'apt'
+}
+}
+
+node /ci/ inherits basenode {
+  include "jdk7"
+  include "maven3"
+  include "jenkins"
+  include "artifactory"
+  include "apt"  
+
+  apt::ppa { 'ppa:chris-lea/fabric': }
+  apt::ppa { 'ppa:chris-lea/python-crypto': }
+  apt::ppa { 'ppa:chris-lea/python-paramiko': }
+  package { 'fabric':
+    ensure => present,
+    provider => 'apt',
+    require => Apt::Ppa['ppa:chris-lea/fabric']
+  }
+
+
+jenkins::plugin {
+  "git": ;
+  "artifactory": ;
+  "build-pipeline-plugin": ;
+  "scm-sync-configuration": ;
+}
+
+}
 node /test/ inherits basenode {
-  package { 'mysql-server' :
-    ensure  => present,
-    provider=> 'apt'
-  }
-  package { 'openjdk-7-jre' :
-    ensure  => present,
-    provider=> 'apt'
-  }
-  package { 'openjdk-6-jre-headless' :
-    ensure  => purged,
-    provider=> 'apt'
-  }
-  package { 'tomcat7' :
-    ensure  => present,
-    provider=> 'apt'
-  }
+include "jre7"
+
+package { 'mysql-server' :
+  ensure  => present,
+  provider=> 'apt'
+}
+
+package { 'tomcat7' :
+  ensure  => present,
+  provider=> 'apt'
+}
+
 }
 
 import "puppetmaster.pp"
