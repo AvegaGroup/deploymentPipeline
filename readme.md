@@ -13,6 +13,10 @@ Development Environment
 
 ### Install ###
 
+#### Pre-requisite git
+The environment setup files are stored on github and you need git to clone the repository.
+You find installation instructions for git on [github](https://help.github.com/articles/set-up-git).
+
 To test the deployment pipeline on a set of virtual machines in your development environment you need to install:
 
 * [Virtual box](https://www.virtualbox.org/wiki/Downloads)
