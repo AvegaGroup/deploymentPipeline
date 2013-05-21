@@ -15,7 +15,13 @@ Development Environment
 
 #### Pre-requisite git
 The environment setup files are stored on github and you need git to clone the repository.
+
+Attention: The Mac version of the install script assumes that [MacPorts](http://www.macports.org/) is installed.
+
 You find installation instructions for git on [github](https://help.github.com/articles/set-up-git).
+
+Clone this repository into a folder of choice
+`$ git clone https://github.com/AvegaGroup/deploymentPipeline.git`
 
 To test the deployment pipeline on a set of virtual machines in your development environment you need to install:
 
