@@ -6,7 +6,7 @@ Vagrant.configure("2") do |config|
   config.vm.define :ci do |cfg|
     cfg.vm.box = "precise64"
 
-    cfg.vm.hostname = "devci1"
+    cfg.vm.hostname = "ci1"
 
     # Jenkins
     cfg.vm.network :forwarded_port, guest: 8080, host: 18080
@@ -16,7 +16,7 @@ Vagrant.configure("2") do |config|
 
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
-    cfg.vm.network :private_network, ip: "192.168.10.10"
+    cfg.vm.network :private_network, ip: "192.168.129.110"
 
     # Provision puppet modules
     cfg.vm.provision :shell, :path => "puppet/install-modules.sh"
@@ -41,14 +41,14 @@ Vagrant.configure("2") do |config|
   config.vm.define :test do |cfg|
     cfg.vm.box = "precise64"
 
-    cfg.vm.hostname = "devtest1"
+    cfg.vm.hostname = "test1"
 
     # Tomcat
     cfg.vm.network :forwarded_port, guest: 8080, host: 18090
 
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
-    cfg.vm.network :private_network, ip: "192.168.10.20"
+    cfg.vm.network :private_network, ip: "192.168.130.72"
 
     # Provision puppet modules
     cfg.vm.provision :shell, :path => "puppet/install-modules.sh"
@@ -73,14 +73,14 @@ Vagrant.configure("2") do |config|
   config.vm.define :prod do |cfg|
     cfg.vm.box = "precise64"
 
-    cfg.vm.hostname = "devprod1"
+    cfg.vm.hostname = "prod1"
 
     # Tomcat
     cfg.vm.network :forwarded_port, guest: 8080, host: 18100
 
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
-    cfg.vm.network :private_network, ip: "192.168.10.30"
+    cfg.vm.network :private_network, ip: "192.168.131.74"
 
     # Provision puppet modules
     cfg.vm.provision :shell, :path => "puppet/install-modules.sh"
