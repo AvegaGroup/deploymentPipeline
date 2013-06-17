@@ -51,6 +51,11 @@ node /ci/ inherits basenode {
     require => Apt::Ppa['ppa:chris-lea/fabric']
   }
 
+  user { "jenkins":
+    ensure     => present,
+    managehome => true,	
+  }
+
   jenkins::plugin {
     "git-client": ;
     "git": ;
