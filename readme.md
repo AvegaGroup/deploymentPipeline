@@ -32,7 +32,7 @@ and add a Ubuntu server box:
 
 `$ vagrant box add precise64 http://files.vagrantup.com/precise64.box`
 
-There is a script `setup-dev.sh` that do the above steps on a Ubuntu 12.10 machine:
+There is a script `setup-dev.sh` that do the above steps on a Ubuntu 12.04 LTS and 12.10 machine:
 
 `$ ./setup-dev.sh`
 
