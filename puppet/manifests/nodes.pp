@@ -32,12 +32,15 @@ node /ci/ inherits basenode {
     ensure   => present,
     provider => 'apt',
   }
-
-  package { 'mysql-server' :
-    ensure  => present,
-    provider=> 'apt'
+  class { 'mysql::server':
+    config_hash => { 'root_password' => 'mysecret_ci' }
   }
-
+  mysql::db { 'petclinic':
+    user     => 'pc',
+    password => 'mac',
+    host     => 'localhost',
+    grant    => ['all'],
+  }
   apt::ppa { 'ppa:chris-lea/fabric': }
   apt::ppa { 'ppa:chris-lea/python-crypto': }
   apt::ppa { 'ppa:chris-lea/python-paramiko': }

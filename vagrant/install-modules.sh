@@ -20,7 +20,7 @@ MODULE_DIR=/etc/puppet/modules
 [ ! -d $MODULE_DIR/ntp ] && puppet module install puppetlabs/ntp 
 [ ! -d $MODULE_DIR/timezone ] && puppet module install saz/timezone
 [ ! -d $MODULE_DIR/sudo ] && puppet module install saz/sudo
-
+[ ! -d $MODULE_DIR/mysql ] && puppet module install puppetlabs/mysql
 
 exit 0
 
