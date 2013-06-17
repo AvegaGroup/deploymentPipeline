@@ -38,7 +38,7 @@ NOTE! ONLY FOR Ubuntu: There is a script `setup-dev.sh` that do the above steps 
 
 ### Use ###
 
-Setup and provision the machines
+Setup and provision the machines 
 NOTE! Make sure that you are in the root directory of your Git image when running the following commands.
 
 `$ vagrant up`
