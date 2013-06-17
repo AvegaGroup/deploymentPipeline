@@ -12,9 +12,9 @@ class maven3 {
     }
 # copy a remote file to /etc/sudoers
     file { "/usr/share/maven3/conf/settings.xml":
-      mode => 440,
-      owner => root,
-      group => root,
+      mode => 644,
+      owner => jenkins,
+      group => jenkins,
       source => "puppet:///modules/maven3/settings.xml"
     }
 }
