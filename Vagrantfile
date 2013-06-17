@@ -19,7 +19,7 @@ Vagrant.configure("2") do |config|
     cfg.vm.network :private_network, ip: "192.168.129.110"
 
     # Provision puppet modules
-    cfg.vm.provision :shell, :path => "puppet/install-modules.sh"
+    cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
 
     # Puppet provisioning
     cfg.vm.provision :puppet do |puppet|
@@ -51,7 +51,7 @@ Vagrant.configure("2") do |config|
     cfg.vm.network :private_network, ip: "192.168.130.72"
 
     # Provision puppet modules
-    cfg.vm.provision :shell, :path => "puppet/install-modules.sh"
+    cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
 
     # Puppet provisioning
     cfg.vm.provision :puppet do |puppet|
@@ -83,7 +83,7 @@ Vagrant.configure("2") do |config|
     cfg.vm.network :private_network, ip: "192.168.131.74"
 
     # Provision puppet modules
-    cfg.vm.provision :shell, :path => "puppet/install-modules.sh"
+    cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
 
     # Puppet provisioning
     cfg.vm.provision :puppet do |puppet|
