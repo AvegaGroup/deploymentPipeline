@@ -20,7 +20,6 @@ node basenode {
 node default inherits basenode {    
 }
 
-
 node /ci/ inherits basenode {
   include "jdk7"
   include "maven3"
@@ -28,9 +27,15 @@ node /ci/ inherits basenode {
   include "artifactory"
   include "apt"  
 
+
   package { 'git':
     ensure   => present,
     provider => 'apt',
+  }
+
+  package { 'mysql-server' :
+    ensure  => present,
+    provider=> 'apt'
   }
 
   apt::ppa { 'ppa:chris-lea/fabric': }
