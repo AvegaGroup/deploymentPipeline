@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
     cfg.vm.provision :puppet do |puppet|
       puppet.manifests_path = "puppet/manifests"
       puppet.module_path = "puppet/modules"
-      puppet.manifest_file = "ci.pp"
+      puppet.manifest_file = "site.pp"
     end
 
     # Provider-specific configuration for VirtualBox:
@@ -57,7 +57,7 @@ Vagrant.configure("2") do |config|
     cfg.vm.provision :puppet do |puppet|
       puppet.manifests_path = "puppet/manifests"
       puppet.module_path = "puppet/modules"
-      puppet.manifest_file = "test.pp"
+      puppet.manifest_file = "site.pp"
     end
 
     # Provider-specific configuration for VirtualBox:
@@ -89,7 +89,7 @@ Vagrant.configure("2") do |config|
     cfg.vm.provision :puppet do |puppet|
       puppet.manifests_path = "puppet/manifests"
       puppet.module_path = "puppet/modules"
-      puppet.manifest_file = "prod.pp"
+      puppet.manifest_file = "site.pp"
     end
 
     # Provider-specific configuration for VirtualBox:
