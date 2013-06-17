@@ -41,6 +41,7 @@ node /ci/ inherits basenode {
     host     => 'localhost',
     grant    => ['all'],
   }
+
   apt::ppa { 'ppa:chris-lea/fabric': }
   apt::ppa { 'ppa:chris-lea/python-crypto': }
   apt::ppa { 'ppa:chris-lea/python-paramiko': }
@@ -61,6 +62,25 @@ node /ci/ inherits basenode {
     "promoted-builds": ;
     "copyartifact": ;
   }
+   
+  file { "/usr/local/bin/ci.setup.jenkins.sh":
+      ensure => present,
+      mode   => 744,
+      owner  => root,
+      group  => root,
+      content=> "#!/bin/bash
+if [ ! -d /root/jenkins.github ]; then
+    mkdir -p /root/jenkins.github
+    cd /root/jenkins.github
+    git clone  https://github.com/AvegaGroup/jenkinsPipeline.git
+    cp -a jenkinsPipeline/* /var/lib/jenkins
+    chown -R jenkins:jenkins /var/lib/jenkins
+    service jenkins restart
+fi",
+
+  }
+  exec { "/usr/local/bin/ci.setup.jenkins.sh": }
+  
 # Directory for ssh conf
   file { "/root/.ssh" :
     ensure => "directory",
