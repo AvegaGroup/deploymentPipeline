@@ -1,12 +1,9 @@
 node basenode {
   import "users.pp"
-  class { ntp:
-    ensure     => running,
-    servers    => [ 'ntp1.sp.se iburst',
-                    'ntp2.sp.se iburst', ],
-    autoupdate => true,
-  }
 
+  class { '::ntp':
+    servers => [ 'ntp1.sp.se', 'ntp2.sp.se' ],
+  }
   class { 'timezone':
     timezone => 'Europe/Stockholm',
     autoupgrade => true,
@@ -32,8 +29,8 @@ node /ci/ inherits basenode {
     ensure   => present,
     provider => 'apt',
   }
-  class { 'mysql::server':
-    config_hash => { 'root_password' => 'mysecret_ci' }
+ class { '::mysql::server':
+    root_password  => 'mysecret_ci',
   }
   mysql::db { 'petclinic':
     user     => 'pc',
@@ -53,7 +50,7 @@ node /ci/ inherits basenode {
 
   user { "jenkins":
     ensure     => present,
-    managehome => true,	
+    home       => '/var/lib/jenkins'
   }
 
   jenkins::plugin {
