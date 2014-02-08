@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<auth-config>
+  <auth-modules>
+    <auth-module type="Default">
+      <property key="usersCanChangeOwnPasswords">true</property>
+      <property key="freeRegistrationAllowed">true</property>
+    </auth-module>
+    <auth-module type="HTTP-Basic" />
+  </auth-modules>
+  <guest-login allowed="false" guest-username="guest" />
+</auth-config>
+

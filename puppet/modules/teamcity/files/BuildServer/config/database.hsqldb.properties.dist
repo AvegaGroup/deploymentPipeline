@@ -1,0 +1,14 @@
+# This is a sample configuration file for configuring TeamCity to use external database.
+# To make it effective, copy it to the "database.properties" file and modify settings
+# according to your environment.
+# Do not modify this file, it will be overwritten on TeamCity server startup.
+# See documentation at http://www.jetbrains.net/confluence/display/TCD8/Setting+up+an+External+Database
+
+# Database: HSQLDB (HyperSonic)  
+
+connectionUrl=jdbc:hsqldb:file:$TEAMCITY_SYSTEM_PATH/buildserver
+
+# The maximum number of connections TeamCity can open on database server.
+maxConnections=40
+
+
