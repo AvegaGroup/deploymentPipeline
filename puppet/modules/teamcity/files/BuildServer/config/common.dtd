@@ -1,0 +1,123 @@
+
+<!ELEMENT requirements (any|exists|not-exists|equals|does-not-equal|more-than|no-more-than|less-than|no-less-than|contains|does-not-contain|starts-with|ends-with|matches|does-not-match|ver-more-than|ver-no-more-than|ver-less-than|ver-no-less-than)*>
+
+<!-- Options -->
+<!ELEMENT options (option)+>
+<!ELEMENT option EMPTY>
+
+<!-- Dependencies -->
+<!ELEMENT dependencies (depend-on)+>
+<!ELEMENT depend-on (options)?>
+<!ATTLIST depend-on
+  sourceBuildTypeId CDATA #REQUIRED
+>
+
+<!-- Dependent artifacts -->
+<!ELEMENT artifact-dependencies (dependency)+>
+<!ELEMENT dependency (revisionRule,(artifact)+)>
+<!ATTLIST dependency
+  sourceBuildTypeId CDATA #REQUIRED
+  cleanDestination (true|false|yes|no) #IMPLIED
+>
+
+<!ELEMENT revisionRule EMPTY>
+<!ATTLIST revisionRule
+  name CDATA #REQUIRED
+  revision CDATA #IMPLIED
+  branch CDATA #IMPLIED
+>
+
+<!ELEMENT artifact EMPTY>
+<!ATTLIST artifact
+  sourcePath CDATA #REQUIRED
+>
+
+<!ELEMENT build-triggers (build-trigger)*  >
+
+<!ELEMENT build-trigger (parameters)*>
+<!ATTLIST build-trigger
+    id CDATA #REQUIRED
+    type CDATA #REQUIRED
+>
+
+<!ELEMENT parameters (param)*>
+
+<!ELEMENT policy (parameters)*>
+<!ATTLIST policy
+    type CDATA #REQUIRED
+    cleanup-level (EVERYTHING|HISTORY_ENTRY|ARTIFACTS) #IMPLIED
+>
+
+<!--
+  Specify some parameter with name 'name' and value 'value' (both strings)
+-->
+<!ELEMENT param (#PCDATA)>
+<!ATTLIST param
+    name CDATA #REQUIRED
+    value CDATA #IMPLIED
+    spec CDATA #IMPLIED
+    redefinition-allowed (true|false|yes|no) #IMPLIED>
+
+
+<!ENTITY % name_value_req "name CDATA #REQUIRED value CDATA #REQUIRED">
+
+
+<!ELEMENT contains (#PCDATA)>
+<!ATTLIST contains %name_value_req;>
+
+<!ELEMENT does-not-contain (#PCDATA)>
+<!ATTLIST does-not-contain %name_value_req;>
+
+<!ELEMENT no-less-than (#PCDATA)>
+<!ATTLIST no-less-than %name_value_req;>
+
+<!ELEMENT ver-no-less-than (#PCDATA)>
+<!ATTLIST ver-no-less-than %name_value_req;>
+
+<!ELEMENT ends-with (#PCDATA)>
+<!ATTLIST ends-with %name_value_req;>
+
+<!ELEMENT less-than (#PCDATA)>
+<!ATTLIST less-than %name_value_req;>
+
+<!ELEMENT ver-less-than (#PCDATA)>
+<!ATTLIST ver-less-than %name_value_req;>
+
+<!ELEMENT any (#PCDATA)>
+<!ATTLIST any
+    name CDATA #REQUIRED>
+
+<!ELEMENT exists (#PCDATA)>
+<!ATTLIST exists
+    name CDATA #REQUIRED>
+
+<!ELEMENT not-exists (#PCDATA)>
+<!ATTLIST not-exists
+    name CDATA #REQUIRED>
+
+<!ELEMENT more-than (#PCDATA)>
+<!ATTLIST more-than %name_value_req;>
+
+<!ELEMENT ver-more-than (#PCDATA)>
+<!ATTLIST ver-more-than %name_value_req;>
+
+<!ELEMENT starts-with (#PCDATA)>
+<!ATTLIST starts-with %name_value_req;>
+
+<!ELEMENT no-more-than (#PCDATA)>
+<!ATTLIST no-more-than %name_value_req;>
+
+<!ELEMENT ver-no-more-than (#PCDATA)>
+<!ATTLIST ver-no-more-than %name_value_req;>
+
+<!ELEMENT equals (#PCDATA)>
+<!ATTLIST equals %name_value_req;>
+
+<!ELEMENT does-not-equal (#PCDATA)>
+<!ATTLIST does-not-equal %name_value_req;>
+
+<!ELEMENT matches (#PCDATA)>
+<!ATTLIST matches %name_value_req;>
+
+<!ELEMENT does-not-match (#PCDATA)>
+<!ATTLIST does-not-match %name_value_req;>
