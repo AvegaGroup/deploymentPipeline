@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cloud-profiles>
+  <cloud-profile profile-id="1" cloud-name="amazon" terminate-idle-time="60">
+    <!-- terminate-idle-time: time to stop idle instance. In minutes -->
+    <name>My EC2 Profile</name>
+    <description>This is my favorite account</description>
+
+    <parameters>
+      <!--Enter Amazon EC2 access parameters -->
+      <param name="owner-id">AMAZON OWNER ID</param>
+      <param name="access-id">AMAZON ACCESS ID</param>
+      <param name="secret-key">AMAZON SECRET KEY</param>
+      <param name="key-pair-name">AMAZON KEY PAIR NAME</param>
+      <param name="security-groups">AMAZON security group;more group;and;so;on</param>
+      <param name="images">AMAZON image id;more id;and;so;on</param>
+    </parameters>
+
+  </cloud-profile>
+
+
+</cloud-profiles>

@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+
+<!ENTITY % common SYSTEM "common.dtd">
+%common;
+
+<!ELEMENT project (name?,description?,(parameters|vcs-roots|template|build-type|cleanup)*)>
+<!ATTLIST project
+    parent-id NMTOKEN #IMPLIED
+    archived (true|false|yes|no) #IMPLIED
+>
+
+<!ELEMENT template (name?, settings)>
+<!ATTLIST template
+    id ID #IMPLIED
+    name CDATA #IMPLIED
+>
+
+<!ELEMENT build-type (name?, description?, settings)>
+<!ATTLIST build-type
+    id ID #IMPLIED
+    name CDATA #IMPLIED
+    paused (true|false|yes|no) #IMPLIED
+>
+
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+
+<!ELEMENT settings (options?, disabled-settings?, (parameters|build-runners|build-extensions|vcs-settings|requirements|build-triggers|artifact-publishing|artifact-dependencies|dependencies|cleanup)*)>
+
+<!ATTLIST settings
+    ref NMTOKEN #IMPLIED
+>
+
+<!ATTLIST option
+    name CDATA #REQUIRED
+    value CDATA #REQUIRED
+>
+
+<!ELEMENT disabled-settings (setting-ref)*>
+
+<!ELEMENT setting-ref EMPTY>
+<!ATTLIST setting-ref
+    ref NMTOKEN #REQUIRED
+>
+
+<!ELEMENT build-runners (runner)*>
+<!ATTLIST build-runners
+    order CDATA #IMPLIED
+>
+
+<!ELEMENT runner (parameters)*>
+<!ATTLIST runner
+    id CDATA #REQUIRED
+    type CDATA #REQUIRED
+    name CDATA #IMPLIED
+>
+
+<!ELEMENT build-extensions (extension)*>
+
+<!ELEMENT extension (parameters)*>
+<!ATTLIST extension
+    id CDATA #REQUIRED
+    type CDATA #REQUIRED
+>
+
+<!ELEMENT vcs-settings (vcs-entry-ref)*>
+<!ATTLIST vcs-settings
+    checkout-mode (MANUAL|ON_AGENT|ON_SERVER|INHERITED) "ON_SERVER"
+    checkout-dir CDATA #IMPLIED
+    labeling-type (NONE|ALWAYS|SUCCESSFUL_ONLY|INHERITED) "NONE"
+    labeling-pattern CDATA #IMPLIED
+>
+
+<!ELEMENT artifact-publishing EMPTY>
+<!ATTLIST artifact-publishing
+    paths CDATA #REQUIRED
+>
+
+<!ELEMENT vcs-entry-ref (checkout-rule)*>
+
+<!ATTLIST vcs-entry-ref
+    root-id CDATA #REQUIRED
+    set-label (yes|no|true|false) #IMPLIED
+>
+    
+<!ELEMENT checkout-rule EMPTY>
+<!ATTLIST checkout-rule
+    rule CDATA #REQUIRED
+>
+
+<!ELEMENT cleanup (options|policy)*>
+
+<!ELEMENT vcs-roots (vcs-root)*>
+<!ATTLIST vcs-roots
+    modification-check-interval CDATA #IMPLIED
+    quiet-period CDATA #IMPLIED
+>
+
+<!ELEMENT vcs-root (name?, param*)>
+<!ATTLIST vcs-root
+    id CDATA #IMPLIED
+    name CDATA #IMPLIED
+    type CDATA #REQUIRED
+    modification-check-interval CDATA #IMPLIED
+>
