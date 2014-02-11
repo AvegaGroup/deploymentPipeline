@@ -2,7 +2,13 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-
+  # Supports local cache, don't wast bandwitdh
+  # vagrant plugin install vagrant-cachier
+  # https://github.com/fgrehm/vagrant-cachier 
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.auto_detect = true
+  end
+  
   config.vm.define :ci do |cfg|
     cfg.vm.box = "precise64"
 
