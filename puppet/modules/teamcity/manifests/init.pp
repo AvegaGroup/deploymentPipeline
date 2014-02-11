@@ -3,13 +3,6 @@
 
 class teamcity {
 
-    file { '/opt/TeamCity-8.0.6.tar.gz' :
-         mode   => '0755',
-         owner  => 'vagrant',
-         group  => 'vagrant',
-         source => 'puppet:///modules/teamcity/TeamCity-8.0.6.tar.gz'
-    }
-
     file { '/opt/installtc.sh' :
         mode   => '0755',
         owner  => 'vagrant',
@@ -49,7 +42,8 @@ class teamcity {
         cwd     => '/opt',
         path    => "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
         user    => "vagrant",
-        require => [File['/opt/TeamCity-8.0.6.tar.gz'], File['/opt/TeamCity'], File['/etc/init.d/teamcity'], File['/opt/TeamCity/.BuildServer']],
+        timeout =>  0,
+        require => [File['/opt/TeamCity'], File['/etc/init.d/teamcity'], File['/opt/TeamCity/.BuildServer']],
     }
 
     service { 'teamcity':
