@@ -36,7 +36,7 @@ Vagrant.configure("2") do |config|
     # Provider-specific configuration for VirtualBox:
     cfg.vm.provider :virtualbox do |vb|
       # Use VBoxManage to customize the VM. For example to change memory:
-      vb.customize ["modifyvm", :id, "--memory", "1024"]
+      vb.customize ["modifyvm", :id, "--memory", "2048"]
       # Fix for problem with NAT-DNS in fault version of VirtualBox at Ubuntu 12.10
       # see https://www.virtualbox.org/ticket/10864
       vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
