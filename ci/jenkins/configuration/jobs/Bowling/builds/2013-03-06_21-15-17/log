@@ -1,6 +1,0 @@
-Started by user [8mha:AAAAlh+LCAAAAAAAAABb85aBtbiIQTGjNKU4P08vOT+vOD8nVc83PyU1x6OyILUoJzMv2y+/JJUBAhiZGBgqihhk0NSjKDWzXb3RdlLBUSYGJk8GtpzUvPSSDB8G5tKinBIGIZ+sxLJE/ZzEvHT94JKizLx0a6BxUmjGOUNodHsLgAzOEgYu/dLi1CL9vNKcHACFIKlWvwAAAA==[0manonymous
-Building in workspace /home/parallels/.jenkins/jobs/Bowling/workspace
-Parsing POMs
-ERROR: No such file /home/parallels/.jenkins/jobs/Bowling/workspace/kata/bowling/pom.xml
-Perhaps you need to specify the correct POM file path in the project configuration?
-[8mha:AAAAWB+LCAAAAAAAAABb85aBtbiIQSmjNKU4P08vOT+vOD8nVc8DzHWtSE4tKMnMz/PLL0ldFVf2c+b/lb5MDAwVRQxSaBqcITRIIQMEMIIUFgAAckCEiWAAAAA=[0mFinished: FAILURE

@@ -1,2 +1,0 @@
-#Wed Feb 20 07:52:59 CET 2013
-getPaths=\ Gets the files that are changed in this commit.\n @return\n      can be empty but never null.\n
