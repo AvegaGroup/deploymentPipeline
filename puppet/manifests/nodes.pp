@@ -62,12 +62,17 @@ node /ci/ inherits basenode {
     home       => '/var/lib/jenkins'
   }
 
+  # Add new plugins below!
+  # Maybe not handling dependencies
   jenkins::plugin {
     "git-client": ;
     "git": ;
     "github-api": ;
     "github": ;
     "artifactory": ;
+    "jquery": ;
+    "dashboard-view": ;
+    "parameterized-trigger": ;
     "build-pipeline-plugin": ;
     "scm-sync-configuration": ;
     "promoted-builds": ;
