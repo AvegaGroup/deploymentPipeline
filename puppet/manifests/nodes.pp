@@ -100,7 +100,7 @@ if [ ! -d /root/jenkins.github ]; then
 fi",
 
   }
-  exec { "/usr/local/bin/ci.setup.jenkins.sh": }
+  exec { "/usr/local/bin/ci.setup.jenkins.sh": require => File ['/usr/local/bin/ci.setup.jenkins.sh'] }
   
 # Directory for ssh conf
   file { "/root/.ssh" :
