@@ -90,6 +90,7 @@ node /ci/ inherits basenode {
       owner  => root,
       group  => root,
       content=> "#!/bin/bash
+set -e
 if [ ! -d /root/jenkins.github ]; then
     mkdir -p /root/jenkins.github
     cd /root/jenkins.github
