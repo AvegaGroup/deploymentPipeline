@@ -28,7 +28,7 @@ To test the deployment pipeline on a set of virtual machines in your development
 * [Virtual box](https://www.virtualbox.org/wiki/Downloads)
 * [Vagrant](http://docs.vagrantup.com/v2/installation/index.html)
 
-and add a Ubuntu server box:
+and add a Ubuntu server box: (Hopefully not needed anymore)
 
 `$ vagrant box add precise64 http://files.vagrantup.com/precise64.box`
 
