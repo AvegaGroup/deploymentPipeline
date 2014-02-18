@@ -66,13 +66,18 @@ node /ci/ inherits basenode {
   # Maybe not handling dependencies
   jenkins::plugin {
     "git-client": ;
+    "parameterized-trigger": ;
+    "token-macro": ;
+    "ssh-credentials": ;
+    "scm-api": ;
+    "credentials": ;
+    "multiple-scms": ;
     "git": ;
     "github-api": ;
     "github": ;
     "artifactory": ;
     "jquery": ;
     "dashboard-view": ;
-    "parameterized-trigger": ;
     "build-pipeline-plugin": ;
     "scm-sync-configuration": ;
     "promoted-builds": ;
