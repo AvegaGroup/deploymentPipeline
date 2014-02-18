@@ -23,7 +23,7 @@ node /ci/ inherits basenode {
   include "jenkins"
   include "artifactory"
   include "apt"
-  include "teamcity"
+
 
 
   package { 'git':
