@@ -31,6 +31,7 @@ Vagrant.configure("2") do |config|
     # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future 
     # More information in: https://github.com/mitchellh/vagrant/pull/2677
     config.vm.synced_folder './puppet/modules', '/tmp/vagrant-puppet-1/modules-0'
+    config.vm.synced_folder './jenkins', '/var/lib/jenkins', owner: "jenkins", group: "jenkins"
 
     # Puppet provisioning
     cfg.vm.provision :puppet do |puppet|
