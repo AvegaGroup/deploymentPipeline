@@ -1,0 +1,71 @@
+<!--
+The MIT License
+
+Copyright (c) 2004-2012, Sun Microsystems, Inc., Kohsuke Kawaguchi, Harald Wellmann, Michael Clarke
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:section title="CVS">
+      <f:entry name="cvsCompression" title="${%Default Compression Level}" field="cvsCompression">
+            <select name="cvsCompression">
+                <f:option value="0" selected="${descriptor.compressionLevel == 0}">${%None}</f:option>
+                <f:option value="1" selected="${descriptor.compressionLevel == 1}">1</f:option>
+                <f:option value="2" selected="${descriptor.compressionLevel == 2}">2</f:option>
+                <f:option value="3" selected="${descriptor.compressionLevel == 3}">3 ${%Recommended}</f:option>
+                <f:option value="4" selected="${descriptor.compressionLevel == 4}">4</f:option>
+                <f:option value="5" selected="${descriptor.compressionLevel == 5}">5</f:option>
+                <f:option value="6" selected="${descriptor.compressionLevel == 6}">6</f:option>
+                <f:option value="7" selected="${descriptor.compressionLevel == 7}">7</f:option>
+                <f:option value="8" selected="${descriptor.compressionLevel == 8}">8</f:option>
+                <f:option value="9" selected="${descriptor.compressionLevel == 9}">9</f:option>
+            </select>
+        </f:entry> 
+        <f:entry name="privateKeyLocation" title="${%Private Key Location}" field="privateKeyLocation">
+            <f:textbox name="privateKeyLocation" />
+        </f:entry> 
+        <f:entry name="privateKeyPassword" title="${%Private Key Password}" field="privateKeyPassword">
+            <f:password name="privateKeyPassword" />
+        </f:entry> 
+        <f:entry name="knownHostsLocation" title="${%Known Hosts Location}" field="knownHostsLocation">
+            <f:textbox name="knownHostsLocation" />
+        </f:entry>
+        <f:entry title="${%Authentication}">
+          <f:repeatable field="authentication">
+              <table width="100%">
+                  <f:entry field="cvsRoot" title="Cvs Root">
+                      <f:textbox name="cvsAuthentication.cvsRoot" checkUrl="'descriptorByName/CVSSCM/checkAuthenticationCvsRoot?value='+escape(this.value)" />
+                  </f:entry>
+                  <f:entry field="username" title="Username">
+                      <f:textbox name="cvsAuthentication.username" />
+                  </f:entry>
+                  <f:entry field="password" title="Password">
+                      <f:password name="cvsAuthentication.password" />
+                  </f:entry>
+                  <f:entry>
+                      <div align="right">
+                          <f:repeatableDeleteButton />
+                      </div>
+                  </f:entry>
+              </table>
+          </f:repeatable>
+        </f:entry>
+  </f:section>
+</j:jelly>

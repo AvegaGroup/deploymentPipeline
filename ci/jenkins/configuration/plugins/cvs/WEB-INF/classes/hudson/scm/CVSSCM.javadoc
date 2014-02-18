@@ -1,0 +1,2 @@
+#Tue Feb 19 18:02:33 GMT 2013
+getRepositories=\ Gets the repositories currently configured for this job.\n\n @return an array of {@link CvsRepository}\n

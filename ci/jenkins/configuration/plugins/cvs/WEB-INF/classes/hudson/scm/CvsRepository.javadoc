@@ -1,0 +1,2 @@
+#Tue Feb 19 18:02:33 GMT 2013
+getPassword=\ Gives the password to be used by this connection. If no password is\n required then null will be returned, other wise a Secret containing\n the encoded password is returned.\n @return the Secret containing this connection's encoded password\n
