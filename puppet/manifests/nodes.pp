@@ -41,12 +41,12 @@ node /ci/ inherits basenode {
     grant    => ['all'],
   }
 
-  mysql::db { 'teamcity':
-      user     => 'teamcity',
-      password => 'password',
-      host     => '%',
-      grant    => ['all'],
-    }
+#  mysql::db { 'teamcity':
+#      user     => 'teamcity',
+#      password => 'password',
+#      host     => '%',
+#      grant    => ['all'],
+#    }
 
   apt::ppa { 'ppa:chris-lea/fabric': }
   apt::ppa { 'ppa:chris-lea/python-crypto': }
@@ -91,7 +91,9 @@ node /ci/ inherits basenode {
       group  => root,
       content=> "#!/bin/bash
 set -e
-if [ ! -d /root/jenkins.github ]; then
+#if [ ! -d /root/jenkins.github ]; then
+if [ ! -d /var/lib/jenkins/jobs/deploy-to-test/ ]; then
+    rm -rf /root/jenkins.github
     mkdir -p /root/jenkins.github
     cd /root/jenkins.github
     git clone  https://github.com/AvegaGroup/jenkinsPipeline.git
