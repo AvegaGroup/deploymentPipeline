@@ -6,9 +6,9 @@
 
 # Database: MySQL  
 
-connectionUrl=jdbc:mysql://<hostname>:3306/<dbname>
-connectionProperties.user=<username>
-connectionProperties.password=<password>
+connectionUrl=jdbc:mysql://192.168.129.110:3306/teamcity
+connectionProperties.user=tcuser
+connectionProperties.password=password
 
 # This option, when it is set to "true",
 # allows to reduce memory usage on large query results.
