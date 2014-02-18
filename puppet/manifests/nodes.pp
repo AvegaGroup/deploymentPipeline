@@ -79,7 +79,6 @@ node /ci/ inherits basenode {
     "jquery": ;
     "dashboard-view": ;
     "build-pipeline-plugin": ;
-    "scm-sync-configuration": ;
     "promoted-builds": ;
     "copyartifact": ;
   }
@@ -93,10 +92,10 @@ node /ci/ inherits basenode {
 set -e
 #if [ ! -d /root/jenkins.github ]; then
 if [ ! -d /var/lib/jenkins/jobs/deploy-to-test/ ]; then
-    rm -rf /root/jenkins.github
+   rm -rf /root/jenkins.github
     mkdir -p /root/jenkins.github
     cd /root/jenkins.github
-    git clone  https://github.com/AvegaGroup/jenkinsPipeline.git
+    git clone  https://github.com/sennerholm/jenkinsPipeline.git
     cp -a jenkinsPipeline/* /var/lib/jenkins
     chown -R jenkins:jenkins /var/lib/jenkins
     service jenkins restart
