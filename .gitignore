@@ -1,3 +1,6 @@
 *~
 \.#*
 .vagrant
+jenkins/*
+!jenkins/*.xml
+!jenkins/jobs/*/config.xml
