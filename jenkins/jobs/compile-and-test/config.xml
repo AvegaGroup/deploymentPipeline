@@ -14,8 +14,7 @@
     <configVersion>2</configVersion>
     <userRemoteConfigs>
       <hudson.plugins.git.UserRemoteConfig>
-        <url>https://github.com/AvegaGroup/spring-petclinic.git</url>
-        <credentialsId>67e61392-f8dd-4a3b-a015-2a68b980967e</credentialsId>
+        <url>git@github.com:AvegaGroup/spring-petclinic.git</url>
       </hudson.plugins.git.UserRemoteConfig>
     </userRemoteConfigs>
     <branches>
