@@ -8,6 +8,7 @@ class maven3 {
     package { 'maven3':
       ensure => present,
       provider => 'apt',
+      before=> File["/usr/share/maven3/conf/settings.xml"],
       require => Apt::Ppa['ppa:natecarlson/maven3']
     }
 # copy a remote file to /etc/sudoers
