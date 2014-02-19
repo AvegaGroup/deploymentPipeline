@@ -106,7 +106,12 @@ under the License.
 
   <servers>
       <server>
-          <id>ci</id>
+          <id>ci-releases</id>
+          <username>admin</username>
+          <password>password</password>
+      </server>
+      <server>
+          <id>ci-snapshots</id>
           <username>admin</username>
           <password>password</password>
       </server>
