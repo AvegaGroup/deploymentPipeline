@@ -105,11 +105,11 @@ under the License.
   </proxies>
 
   <servers>
-   <server>
-      <id>ci1</id>
-      <username>admin</username>
-      <password>password</password>
-   </server>
+      <server>
+          <id>ci</id>
+          <username>admin</username>
+          <password>password</password>
+      </server>
 </servers>
   <!-- mirrors
    | This is a list of mirrors to be used in downloading artifacts from remote repositories.
