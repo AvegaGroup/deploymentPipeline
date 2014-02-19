@@ -31,6 +31,8 @@ Vagrant.configure("2") do |config|
     # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future 
     # More information in: https://github.com/mitchellh/vagrant/pull/2677
     config.vm.synced_folder './puppet/modules', '/tmp/vagrant-puppet-1/modules-0'
+    # Need to let jenkins write to this folder, using owner/group is depending on having that user in the host os.
+    config.vm.synced_folder './jenkins', '/var/lib/jenkins', mount_options: ["dmode=777,fmode=666"]
 
     # Puppet provisioning
     cfg.vm.provision :puppet do |puppet|

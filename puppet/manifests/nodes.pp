@@ -79,31 +79,10 @@ node /ci/ inherits basenode {
     "jquery": ;
     "dashboard-view": ;
     "build-pipeline-plugin": ;
-    "scm-sync-configuration": ;
     "promoted-builds": ;
     "copyartifact": ;
   }
    
-  file { "/usr/local/bin/ci.setup.jenkins.sh":
-      ensure => present,
-      mode   => 744,
-      owner  => root,
-      group  => root,
-      content=> "#!/bin/bash
-set -e
-#if [ ! -d /root/jenkins.github ]; then
-if [ ! -d /var/lib/jenkins/jobs/deploy-to-test/ ]; then
-    rm -rf /root/jenkins.github
-    mkdir -p /root/jenkins.github
-    cd /root/jenkins.github
-    git clone  https://github.com/AvegaGroup/jenkinsPipeline.git
-    cp -a jenkinsPipeline/* /var/lib/jenkins
-    chown -R jenkins:jenkins /var/lib/jenkins
-    service jenkins restart
-fi",
-
-  }
-  exec { "/usr/local/bin/ci.setup.jenkins.sh": require => File ['/usr/local/bin/ci.setup.jenkins.sh'] }
   
 # Directory for ssh conf
   file { "/root/.ssh" :
