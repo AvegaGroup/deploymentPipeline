@@ -1,7 +1,7 @@
 Deployment Pipeline
 ===================
 
-The root directory for Avegas Deployment Pipelinne template
+The root directory for Avegas Deployment Pipeline template
 
 Structure
 ---------
