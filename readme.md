@@ -36,6 +36,15 @@ NOTE! ONLY FOR Ubuntu: There is a script `setup-dev.sh` that do the above steps 
 
 `$ ./setup-dev.sh`
 
+#### Pre-requisite vagrant
+
+Vagrant has a lot to offer when it comes to handy plug-ins.
+
+The following two should be installed before vagrant is used below:
+
+    vagrant plugin install vagrant-vbguest
+    vagrant plugin install vagrant-cachier
+
 ### Use ###
 
 Setup and provision the machines 
