@@ -65,7 +65,7 @@
             </hudson.plugins.parameterizedtrigger.PredefinedBuildParameters>
           </configs>
           <projects>deploy-to-test</projects>
-          <condition>SUCCESS</condition>
+          <condition>UNSTABLE_OR_BETTER</condition>
           <triggerWithNoParameters>false</triggerWithNoParameters>
         </hudson.plugins.parameterizedtrigger.BuildTriggerConfig>
       </configs>

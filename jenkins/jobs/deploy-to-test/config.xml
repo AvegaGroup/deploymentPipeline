@@ -9,19 +9,19 @@
   <disabled>false</disabled>
   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <triggers class="vector"/>
+  <triggers/>
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
       <command>rm -rf /var/lib/jenkins/jobs/deploy-to-test/workspace/*
-cp /var/lib/jenkins/jobs/compile-and-test/builds/${COMMIT_BUILD}/*deployment.zip deployment.zip
-unzip deployment.zip
-cd spring-petclinic*
-fab test deploy_petclinic</command>
+wget http://localhost:8081/artifactory/libs-release-local/org/springframework/samples/spring-petclinic/${COMMIT_BUILD}/spring-petclinic-${COMMIT_BUILD}-deployment.zip
+unzip spring-petclinic-${COMMIT_BUILD}-deployment.zip
+cd spring-petclinic-${COMMIT_BUILD}
+fab test deploy_petclinic:build_number=${COMMIT_BUILD}</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>
-    <hudson.plugins.parameterizedtrigger.BuildTrigger plugin="parameterized-trigger@2.17">
+    <hudson.plugins.parameterizedtrigger.BuildTrigger plugin="parameterized-trigger@2.22">
       <configs>
         <hudson.plugins.parameterizedtrigger.BuildTriggerConfig>
           <configs>
