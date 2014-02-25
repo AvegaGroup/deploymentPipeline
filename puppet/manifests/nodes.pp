@@ -30,6 +30,7 @@ node /ci/ inherits basenode {
     ensure   => present,
     provider => 'apt',
   }
+
  class { '::mysql::server':
     root_password  => 'mysecret_ci',
   }
@@ -121,6 +122,17 @@ node /tc/ inherits basenode {
     provider => 'apt',
   }
 
+  class { '::mysql::server':
+      root_password  => 'mysecret_ci',
+    }
+
+    mysql::db { 'petclinic':
+      user     => 'pc',
+      password => 'mac',
+      host     => 'localhost',
+      grant    => ['all'],
+    }
+
   apt::ppa { 'ppa:chris-lea/fabric': }
   apt::ppa { 'ppa:chris-lea/python-crypto': }
   apt::ppa { 'ppa:chris-lea/python-paramiko': }
@@ -156,10 +168,16 @@ node /tc/ inherits basenode {
 node /test/ inherits basenode {
 include "jre7"
 
-package { 'mysql-server' :
-  ensure  => present,
-  provider=> 'apt'
-}
+ class { '::mysql::server':
+    root_password  => 'mysecret_ci',
+  }
+
+  mysql::db { 'petclinic':
+    user     => 'pc',
+    password => 'mac',
+    host     => 'localhost',
+    grant    => ['all'],
+  }
 
 package { 'tomcat7' :
   ensure  => present,
