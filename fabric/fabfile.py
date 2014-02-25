@@ -53,8 +53,10 @@ def deploy_petclinic(build_number='61'):
 
     # download artefacts
     run('echo Downloading artefacts')
-    local("curl %s > %s" % (repo_war, local_war))
-    local("curl %s > %s" % (repo_smoke, local_smoke))
+    local("wget %s" % (repo_war))
+    local("mv %s %s" %(artefact_war, local_war))
+    local("wget %s" % (repo_smoke))
+    local("mv %s %s" % (artefact_smoke, local_smoke))
 
     # deploy application
     run('service tomcat7 stop')
