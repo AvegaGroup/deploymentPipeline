@@ -27,7 +27,10 @@ Vagrant.configure("2") do |config|
 
     # Provision puppet modules
     cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
+    #Ensure CI environment knows of test and prod instances
     cfg.vm.provision :shell, :inline => "sudo ln -fs /vagrant/vagrant/hosts /etc/hosts"
+     #Curl seems to not be installed. Hacked
+    cfg.vm.provision :shell, :inline => "sudo apt-get install curl"
 
     # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future 
     # More information in: https://github.com/mitchellh/vagrant/pull/2677
@@ -67,6 +70,11 @@ Vagrant.configure("2") do |config|
 
     # Provision puppet modules
     cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
+     #Unzip & Curl seems to not be installed. Hacked
+    cfg.vm.provision :shell, :inline => "sudo apt-get install unzip"
+    cfg.vm.provision :shell, :inline => "sudo apt-get install curl"
+
+
     # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future 
     # More information in: https://github.com/mitchellh/vagrant/pull/2677
     config.vm.synced_folder './puppet/modules', '/tmp/vagrant-puppet-1/modules-0'
@@ -102,6 +110,9 @@ Vagrant.configure("2") do |config|
 
     # Provision puppet modules
     cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
+    #Unzip & Curl seems to not be installed. Hacked
+    cfg.vm.provision :shell, :inline => "sudo apt-get install unzip"
+    cfg.vm.provision :shell, :inline => "sudo apt-get install curl"
 
    # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future 
     # More information in: https://github.com/mitchellh/vagrant/pull/2677
