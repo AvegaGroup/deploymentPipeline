@@ -1,11 +1,7 @@
 Deployment Pipeline
 ===================
 
-The root directory for Avegas Deployment Pipeline template
-
-Structure
----------
-tbd
+You can read more about the structure and the goals of the project on the [wiki] https://github.com/AvegaGroup/deploymentPipeline/wiki
 
 
 Development Environment
@@ -28,6 +24,7 @@ To test the deployment pipeline on a set of virtual machines in your development
 * [Virtual box](https://www.virtualbox.org/wiki/Downloads)
 * [Vagrant](http://docs.vagrantup.com/v2/installation/index.html)
 
+
 and add a Ubuntu server box: (Hopefully not needed anymore)
 
 `$ vagrant box add precise64 http://files.vagrantup.com/precise64.box`
@@ -36,14 +33,14 @@ NOTE! ONLY FOR Ubuntu: There is a script `setup-dev.sh` that do the above steps 
 
 `$ ./setup-dev.sh`
 
-#### Pre-requisite vagrant
+#### Vagrant configuration
 
 Vagrant has a lot to offer when it comes to handy plug-ins.
 
 The following two should be installed before vagrant is used below:
 
-    vagrant plugin install vagrant-vbguest
-    vagrant plugin install vagrant-cachier
+    ` vagrant plugin install vagrant-vbguest
+    ` vagrant plugin install vagrant-cachier
 
 ### Use ###
 
