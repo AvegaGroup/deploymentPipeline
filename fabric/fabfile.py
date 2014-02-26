@@ -1,15 +1,17 @@
 from fabric.api import *
 import time
+import tempfile
 
+env.user='root'
 
-#env.roledefs = {                                                               
-#    'prod': ['labprod1', 'labprod2'],                                          
-#    'test': ['labtest1'],                                                      
-#}                                                                              
+#env.roledefs = {
+#    'prod': ['prod1', 'labprod2'],
+#    'test': ['labtest1'],
+#}
 
 @task
 def prod():
-    env.hosts = ['prod1','prod2']
+    env.hosts = ['prod1']
 
 @task
 def test():
@@ -20,43 +22,32 @@ def host_type():
     run('uname -s')
     run('hostname -f')
 
-
-def get_version_number(build_number):
-    file_name = "/tmp/%s/version.txt" % build_number
-    for line in open(file_name).readlines():
-	if "maven.version" in line:
-	    return line.split('=')[1].strip()
-	raise "Failed to parse maven.version from " + file_name
-
 @task
-def deploy_petclinic(build_number='61'):
+def deploy_petclinic(build_number=''):
     run('echo deploying pet clinic')
-    version_number = get_version_number(build_number)
 
-    artefact_base_name = "spring-petclinic-" + version_number 
-    artefact_smoke = "spring-petclinic-" + version_number + "-smoketest.zip"
-    artefact_war = "spring-petclinic-" + version_number + ".war"
+    artefact_base_name = "spring-petclinic-" + build_number
+    artefact_smoke = "spring-petclinic-" + build_number + "-smoketest.zip"
+    artefact_war = "spring-petclinic-" + build_number + ".war"
 
-    repo_url = "http://labci2:8080/artifactory/libs-release-local/org/springframework/samples/spring-petclinic/%(version_number)s/%(artefact_name)s"
-    repo_war = repo_url % { "version_number" : version_number, "artefact_name" : artefact_war }
-    repo_smoke = repo_url % { "version_number" : version_number, "artefact_name" : artefact_smoke }
+    repo_url = "http://ci1:8081/artifactory/libs-release-local/org/springframework/samples/spring-petclinic/%(build_number)s/%(artefact_name)s"
+    repo_war = repo_url % { "build_number" : build_number, "artefact_name" : artefact_war }
+    repo_smoke = repo_url % { "build_number" : build_number, "artefact_name" : artefact_smoke }
 
-    local_war = "/tmp/deploy-%s/petclinic.war" % build_number
-    local_smoke = "/tmp/deploy-%s/smoketest.zip" % build_number
+    local_temp=  tempfile.mkdtemp(prefix=build_number)
+    local_war =  "%s/petclinic.war" % local_temp
+    local_smoke = "%s/smoketest.zip" % local_temp
 
     remote_war = "/var/lib/tomcat7/webapps/petclinic.war"
-    remote_smoke = "/tmp/deploy-%s/smoketest.zip" % build_number
+    remote_smoke = "%s/smoketest.zip" % local_temp
 
     # creating local and remote temp directories
-    local("mkdir /tmp/deploy-%s" % build_number)
-    run("mkdir /tmp/deploy-%s" % build_number)
+    run("mkdir %s" % local_temp)
 
     # download artefacts
     run('echo Downloading artefacts')
-    local("wget %s" % (repo_war))
-    local("mv %s %s" %(artefact_war, local_war))
-    local("wget %s" % (repo_smoke))
-    local("mv %s %s" % (artefact_smoke, local_smoke))
+    local("curl %s > %s" % (repo_war, local_war))
+    local("curl %s > %s" % (repo_smoke, local_smoke))
 
     # deploy application
     run('service tomcat7 stop')
@@ -74,8 +65,9 @@ def deploy_petclinic(build_number='61'):
     waitForTomcatToStart()
 
     # run smoke test
-    remote_smoke_bin = '/tmp/deploy-%s/%s/%s' % (build_number, artefact_base_name, "smoketest.sh")
-    run('unzip %s -d /tmp/deploy-%s' % (remote_smoke, build_number))
+    remote_smoke_bin = '%s/%s/%s' % (local_temp, artefact_base_name, "smoketest.sh")
+    run('unzip %s -d %s' % (remote_smoke, local_temp))
+    run('sudo chmod 777 %s' % (remote_smoke_bin))
     run(remote_smoke_bin)
 
 
