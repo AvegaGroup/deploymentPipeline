@@ -1,5 +1,8 @@
 Deployment Pipeline
 ===================
+This project will create ContiuousDelivery pipeline setup that you can run on a reasonably spec laptop.
+It will create three virtual machines (which need 2GB RAM in total) that build, test, deploy and host the spring-petclinic application.
+
 
 You can read more about the structure and the goals of the project on the [wiki] https://github.com/AvegaGroup/deploymentPipeline/wiki
 
