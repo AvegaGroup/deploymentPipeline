@@ -10,6 +10,8 @@ Vagrant.configure("2") do |config|
   end
   config.vm.box = "precise64"
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"  
+
+  # CI Machine
   config.vm.define :ci do |cfg|
     cfg.vm.box = "precise64"
 
@@ -30,7 +32,7 @@ Vagrant.configure("2") do |config|
     #Ensure CI environment knows of test and prod instances
     cfg.vm.provision :shell, :inline => "sudo ln -fs /vagrant/vagrant/hosts /etc/hosts"
      #Curl seems to not be installed. Hacked
-    cfg.vm.provision :shell, :inline => "sudo apt-get install curl"
+    cfg.vm.provision :shell, :inline => "sudo apt-get -y install curl"
 
     # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future 
     # More information in: https://github.com/mitchellh/vagrant/pull/2677
@@ -55,7 +57,7 @@ Vagrant.configure("2") do |config|
       vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     end
   end
-
+  # TEST machine
   config.vm.define :test do |cfg|
     cfg.vm.box = "precise64"
 
@@ -71,8 +73,8 @@ Vagrant.configure("2") do |config|
     # Provision puppet modules
     cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
      #Unzip & Curl seems to not be installed. Hacked
-    cfg.vm.provision :shell, :inline => "sudo apt-get install unzip"
-    cfg.vm.provision :shell, :inline => "sudo apt-get install curl"
+    cfg.vm.provision :shell, :inline => "sudo apt-get -y install unzip"
+    cfg.vm.provision :shell, :inline => "sudo apt-get -y install curl"
 
 
     # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future 
@@ -111,8 +113,8 @@ Vagrant.configure("2") do |config|
     # Provision puppet modules
     cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
     #Unzip & Curl seems to not be installed. Hacked
-    cfg.vm.provision :shell, :inline => "sudo apt-get install unzip"
-    cfg.vm.provision :shell, :inline => "sudo apt-get install curl"
+    cfg.vm.provision :shell, :inline => "sudo apt-get -y install unzip"
+    cfg.vm.provision :shell, :inline => "sudo apt-get -y install curl"
 
    # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future 
     # More information in: https://github.com/mitchellh/vagrant/pull/2677
