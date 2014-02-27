@@ -41,7 +41,7 @@
     <groupId>org.springframework.samples</groupId>
     <artifactId>spring-petclinic</artifactId>
   </rootModule>
-  <goals>clean deploy scm:tag</goals>
+  <goals>clean deploy -DaddTimestamp=true scm:tag</goals>
   <defaultGoals>install</defaultGoals>
   <aggregatorStyleBuild>true</aggregatorStyleBuild>
   <incrementalBuild>false</incrementalBuild>
@@ -74,7 +74,7 @@
   <buildWrappers/>
   <prebuilders>
     <hudson.tasks.Maven>
-      <targets>versions:set -DnewVersion=$BUILD_NUMBER </targets>
+      <targets>versions:set -DnewVersion=${BUILD_NUMBER}</targets>
       <mavenName>maven</mavenName>
       <usePrivateRepository>false</usePrivateRepository>
       <settings class="jenkins.mvn.DefaultSettingsProvider"/>
