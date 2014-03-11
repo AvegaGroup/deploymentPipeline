@@ -41,7 +41,7 @@
     <groupId>org.springframework.samples</groupId>
     <artifactId>spring-petclinic</artifactId>
   </rootModule>
-  <goals>clean deploy -DaddTimestamp=true scm:tag</goals>
+  <goals>clean deploy</goals>
   <defaultGoals>install</defaultGoals>
   <aggregatorStyleBuild>true</aggregatorStyleBuild>
   <incrementalBuild>false</incrementalBuild>
@@ -82,9 +82,13 @@
     </hudson.tasks.Maven>
   </prebuilders>
   <postbuilders>
-    <hudson.tasks.Shell>
-      <command></command>
-    </hudson.tasks.Shell>
+    <hudson.tasks.Maven>
+      <targets>-DaddTimestamp=true scm:tag</targets>
+      <mavenName>maven</mavenName>
+      <usePrivateRepository>false</usePrivateRepository>
+      <settings class="jenkins.mvn.DefaultSettingsProvider"/>
+      <globalSettings class="jenkins.mvn.DefaultGlobalSettingsProvider"/>
+    </hudson.tasks.Maven>
   </postbuilders>
   <runPostStepsIfResult>
     <name>SUCCESS</name>
