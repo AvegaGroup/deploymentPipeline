@@ -82,6 +82,7 @@ node /ci/ inherits basenode {
     "build-pipeline-plugin": ;
     "promoted-builds": ;
     "copyartifact": ;
+    "delivery-pipeline-plugin": ;
   }
    
   
