@@ -78,10 +78,12 @@ node /ci/ inherits basenode {
     "github": ;
     "artifactory": ;
     "jquery": ;
+    "jquery-ui": ;
     "dashboard-view": ;
     "build-pipeline-plugin": ;
     "promoted-builds": ;
     "copyartifact": ;
+    "delivery-pipeline-plugin": ;
   }
    
   
