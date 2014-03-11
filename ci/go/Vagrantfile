@@ -14,18 +14,19 @@ $script_go = <<SCRIPT
     sudo dpkg -i godeb.deb
     sudo dpkg -i godeb_agent.deb
     echo Done...
+
 SCRIPT
 
-    config.vm.define :cigo do |cfg|
+    config.vm.define :go do |cfg|
         cfg.vm.box = "precise64"
 
-        cfg.vm.hostname = "cigo"
+        cfg.vm.hostname = "go"
 
         # GO
-        cfg.vm.network :forwarded_port, guest: 8080, host: 18180
+        cfg.vm.network :forwarded_port, guest: 8153, host: 18153
 
         # Artifactory
-        cfg.vm.network :forwarded_port, guest: 8081, host: 18181
+        cfg.vm.network :forwarded_port, guest: 8081, host: 18281
 
         # Create a private network, which allows host-only access to the machine
         # using a specific IP.
@@ -35,9 +36,6 @@ SCRIPT
         cfg.vm.provision :shell, :path => "../../vagrant/install-modules.sh"
         #Ensure CI environment knows of test and prod instances
         #cfg.vm.provision :shell, :inline => "sudo ln -fs /vagrant/vagrant/hosts /etc/hosts"
-
-
-
 
         # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future
         # More information in: https://github.com/mitchellh/vagrant/pull/2677
