@@ -1,6 +1,31 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+$script_lb = <<SCRIPT
+    echo Provisioning VM...
+    echo Installing dependencies...
+    apt-get update
+    apt-get -qy install haproxy
+    echo Configuring haproxy...
+    echo                                                      >> /etc/haproxy/haproxy.cfg
+    echo "frontend http-in"                                   >> /etc/haproxy/haproxy.cfg
+    echo "        bind *:9000"                                >> /etc/haproxy/haproxy.cfg
+    echo "        default_backend servers"                    >> /etc/haproxy/haproxy.cfg
+    echo                                                      >> /etc/haproxy/haproxy.cfg
+    echo "backend servers"                                    >> /etc/haproxy/haproxy.cfg
+    echo "        stats enable"                               >> /etc/haproxy/haproxy.cfg
+    echo "        retries 3"                                  >> /etc/haproxy/haproxy.cfg
+    echo "        option redispatch"                          >> /etc/haproxy/haproxy.cfg
+    echo "        option httpchk"                             >> /etc/haproxy/haproxy.cfg
+    echo "        option forwardfor"                          >> /etc/haproxy/haproxy.cfg
+    echo "        option http-server-close"                   >> /etc/haproxy/haproxy.cfg
+    echo "        server prod 10.0.2.2:18001 check inter 1000" >> /etc/haproxy/haproxy.cfg
+    echo "        server prod2 10.0.2.2:18002 check inter 1000" >> /etc/haproxy/haproxy.cfg
+    echo "ENABLED=1" > /etc/default/haproxy
+    service haproxy restart
+    echo Done.
+SCRIPT
+
 Vagrant.configure("2") do |config|
   # Supports local cache, don't wast bandwitdh
   # vagrant plugin install vagrant-cachier
@@ -25,7 +50,7 @@ Vagrant.configure("2") do |config|
 
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
-    cfg.vm.network :private_network, ip: "192.168.129.110"
+    cfg.vm.network :private_network, ip: "192.168.129.100"
 
     # Provision puppet modules
     cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
@@ -68,7 +93,7 @@ Vagrant.configure("2") do |config|
 
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
-    cfg.vm.network :private_network, ip: "192.168.130.72"
+    cfg.vm.network :private_network, ip: "192.168.130.100"
 
     # Provision puppet modules
     cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
@@ -98,17 +123,33 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  config.vm.define :prodlb do |lb|
+          lb.vm.box = "precise64"
+          lb.vm.hostname = "prodlb"
+
+          lb.vm.network :private_network, ip: "192.168.131.100"
+
+          lb.vm.provision :shell, :inline => $script_lb
+          lb.vm.network "forwarded_port", guest: 9000, host: 9000
+          lb.vm.provider "virtualbox" do |vm|
+              vm.customize [
+                         'modifyvm', :id,
+                         '--memory', '512'
+                     ]
+          end
+    end
+
   config.vm.define :prod do |cfg|
     cfg.vm.box = "precise64"
 
     cfg.vm.hostname = "prod1"
 
     # Tomcat
-    cfg.vm.network :forwarded_port, guest: 8080, host: 18100
+    cfg.vm.network :forwarded_port, guest: 8080, host: 18001
 
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
-    cfg.vm.network :private_network, ip: "192.168.131.74"
+    cfg.vm.network :private_network, ip: "192.168.131.101"
 
     # Provision puppet modules
     cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
@@ -117,6 +158,45 @@ Vagrant.configure("2") do |config|
     cfg.vm.provision :shell, :inline => "sudo apt-get -y install curl"
 
    # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future 
+    # More information in: https://github.com/mitchellh/vagrant/pull/2677
+    config.vm.synced_folder './puppet/modules', '/tmp/vagrant-puppet-1/modules-0'
+    # Puppet provisioning
+    cfg.vm.provision :puppet do |puppet|
+      puppet.manifests_path = "puppet/manifests"
+#      puppet.module_path = "puppet/modules"
+      puppet.options        = '--modulepath "/etc/puppet/modules:/tmp/vagrant-puppet-1/modules-0"'
+      puppet.manifest_file = "site.pp"
+    end
+
+    # Provider-specific configuration for VirtualBox:
+    cfg.vm.provider :virtualbox do |vb|
+      # Use VBoxManage to customize the VM. For example to change memory:
+      vb.customize ["modifyvm", :id, "--memory", "512"]
+      # Fix for problem with NAT-DNS in fault version of VirtualBox at Ubuntu 12.10
+      # see https://www.virtualbox.org/ticket/10864
+      vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    end
+  end
+
+  config.vm.define :prod2 do |cfg|
+    cfg.vm.box = "precise64"
+
+    cfg.vm.hostname = "prod2"
+
+    # Tomcat
+    cfg.vm.network :forwarded_port, guest: 8080, host: 18002
+
+    # Create a private network, which allows host-only access to the machine
+    # using a specific IP.
+    cfg.vm.network :private_network, ip: "192.168.131.102"
+
+    # Provision puppet modules
+    cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
+    #Unzip & Curl seems to not be installed. Hacked
+    cfg.vm.provision :shell, :inline => "sudo apt-get -y install unzip"
+    cfg.vm.provision :shell, :inline => "sudo apt-get -y install curl"
+
+   # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future
     # More information in: https://github.com/mitchellh/vagrant/pull/2677
     config.vm.synced_folder './puppet/modules', '/tmp/vagrant-puppet-1/modules-0'
     # Puppet provisioning

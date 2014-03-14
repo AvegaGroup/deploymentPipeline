@@ -31,17 +31,6 @@ node /ci/ inherits basenode {
     provider => 'apt',
   }
 
- class { '::mysql::server':
-    root_password  => 'mysecret_ci',
-  }
-
-  mysql::db { 'petclinic':
-    user     => 'pc',
-    password => 'mac',
-    host     => 'localhost',
-    grant    => ['all'],
-  }
-
   apt::ppa { 'ppa:chris-lea/fabric': }
   apt::ppa { 'ppa:chris-lea/python-crypto': }
   apt::ppa { 'ppa:chris-lea/python-paramiko': }
@@ -113,21 +102,10 @@ node /go/ inherits basenode {
     ensure   => present,
     provider => 'apt',
   }
-
-  class { '::mysql::server':
-      root_password  => 'mysecret_ci',
-    }
-
-    mysql::db { 'petclinic':
-      user     => 'pc',
-      password => 'mac',
-      host     => 'localhost',
-      grant    => ['all'],
-    }
 }
 
 node /test/ inherits basenode {
-include "jre7"
+    include "jre7"
 
     class { '::mysql::server':
         root_password  => 'mysecret_ci',
@@ -155,7 +133,40 @@ include "jre7"
 
 }
 
+node /prodlb/ inherits basenode {
+
+}
+
 node /prod/ inherits basenode {
+        include "jre7"
+
+    class { '::mysql::server':
+        root_password  => 'mysecret_ci',
+    }
+
+    mysql::db { 'petclinic':
+        user     => 'pc',
+        password => 'mac',
+        host     => 'localhost',
+        grant    => ['all'],
+    }
+
+    package { 'tomcat7' :
+        ensure  => present,
+        provider=> 'apt'
+    }
+
+    ssh_authorized_key { 'cisshkey' :
+        ensure  => present,
+        key     => "AAAAB3NzaC1yc2EAAAADAQABAAABAQDc/jMTnHbqJTFe0loBF2W2Rzdd9KaANSN91HZ7duqRkrVdLb/rpDedeflaxYbUo843PlkngjRHr4p9y0ikKqcxV1hQP7XKT0h9+4I0iJ6dFj+escI5TmjV5wntPqgGVlMlEeVNKX+fD/fiUSNvWYDJRZBnRQzjeKNl13pYosIruE1RbO8B/Ce/1NkKPP2iA3BD98mYazKSARQAsECMVJ1d5QWAeibJojWXsT1tqLsuI1OwASIEQy/294A1UKbI6eTclN49uFzXePLt2sXK9yxIgWOFyKaZkUfB+JGCA1b2yV5KBdzAJge9zE+o69/pYUpW0vCYGLdChZhu0KyiPTuT",
+        name    => "root@CI",
+        type    => "ssh-rsa",
+        user    => "root",
+    }
+}
+
+
+node /prod2/ inherits basenode {
 include "jre7"
 
     class { '::mysql::server':
