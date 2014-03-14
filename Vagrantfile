@@ -26,6 +26,15 @@ $script_lb = <<SCRIPT
     echo Done.
 SCRIPT
 
+$curl_unzip = <<SCRIPT
+    echo "Install curl and unzip"
+    sudo apt-get -y install curl
+    sudo apt-get -y install unzip
+SCRIPT
+
+
+
+
 Vagrant.configure("2") do |config|
   # Supports local cache, don't wast bandwitdh
   # vagrant plugin install vagrant-cachier
@@ -56,10 +65,9 @@ Vagrant.configure("2") do |config|
     cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
     #Ensure CI environment knows of test and prod instances
     cfg.vm.provision :shell, :inline => "sudo ln -fs /vagrant/vagrant/hosts /etc/hosts"
-     #Curl seems to not be installed. Hacked
-    cfg.vm.provision :shell, :inline => "sudo apt-get -y install curl"
+    cfg.vm.provision :shell, :inline => $curl_unzip
 
-    # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future 
+    # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future
     # More information in: https://github.com/mitchellh/vagrant/pull/2677
     config.vm.synced_folder './puppet/modules', '/tmp/vagrant-puppet-1/modules-0'
     # Need to let jenkins write to this folder, using owner/group is depending on having that user in the host os.
@@ -97,12 +105,11 @@ Vagrant.configure("2") do |config|
 
     # Provision puppet modules
     cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
-     #Unzip & Curl seems to not be installed. Hacked
-    cfg.vm.provision :shell, :inline => "sudo apt-get -y install unzip"
-    cfg.vm.provision :shell, :inline => "sudo apt-get -y install curl"
+    cfg.vm.provision :shell, :inline => "sudo ln -fs /vagrant/vagrant/test/hosts /etc/hosts"
+    cfg.vm.provision :shell, :inline => $curl_unzip
 
 
-    # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future 
+    # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future
     # More information in: https://github.com/mitchellh/vagrant/pull/2677
     config.vm.synced_folder './puppet/modules', '/tmp/vagrant-puppet-1/modules-0'
     # Puppet provisioning
@@ -123,23 +130,24 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  config.vm.define :prodlb do |lb|
-          lb.vm.box = "precise64"
-          lb.vm.hostname = "prodlb"
+ config.vm.define :prodlb do |cfg|
+        cfg.vm.box = "precise64"
+        cfg.vm.hostname = "prodlb"
 
-          lb.vm.network :private_network, ip: "192.168.131.100"
+        cfg.vm.network :private_network, ip: "192.168.131.100"
+        cfg.vm.provision :shell, :inline => "sudo ln -fs /vagrant/vagrant/prod/hosts /etc/hosts"
 
-          lb.vm.provision :shell, :inline => $script_lb
-          lb.vm.network "forwarded_port", guest: 9000, host: 9000
-          lb.vm.provider "virtualbox" do |vm|
-              vm.customize [
-                         'modifyvm', :id,
-                         '--memory', '512'
-                     ]
-          end
+        cfg.vm.provision :shell, :inline => $script_lb
+        cfg.vm.network "forwarded_port", guest: 9000, host: 9000
+        cfg.vm.provider "virtualbox" do |vm|
+          vm.customize [
+                     'modifyvm', :id,
+                     '--memory', '512'
+                 ]
+        end
     end
 
-  config.vm.define :prod do |cfg|
+ config.vm.define :prod1 do |cfg|
     cfg.vm.box = "precise64"
 
     cfg.vm.hostname = "prod1"
@@ -150,14 +158,13 @@ Vagrant.configure("2") do |config|
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
     cfg.vm.network :private_network, ip: "192.168.131.101"
+    cfg.vm.provision :shell, :inline => "sudo ln -fs /vagrant/vagrant/prod/hosts /etc/hosts"
 
     # Provision puppet modules
     cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
-    #Unzip & Curl seems to not be installed. Hacked
-    cfg.vm.provision :shell, :inline => "sudo apt-get -y install unzip"
-    cfg.vm.provision :shell, :inline => "sudo apt-get -y install curl"
+    cfg.vm.provision :shell, :inline => $curl_unzip
 
-   # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future 
+   # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future
     # More information in: https://github.com/mitchellh/vagrant/pull/2677
     config.vm.synced_folder './puppet/modules', '/tmp/vagrant-puppet-1/modules-0'
     # Puppet provisioning
@@ -167,6 +174,11 @@ Vagrant.configure("2") do |config|
       puppet.options        = '--modulepath "/etc/puppet/modules:/tmp/vagrant-puppet-1/modules-0"'
       puppet.manifest_file = "site.pp"
     end
+
+    #Configure Mysql to allow incoming network connections
+    cfg.vm.provision :shell, :inline => "sudo service mysql stop"
+    #cfg.vm.provision :shell, :inline => "sudo ln -fs /vagrant/vagrant/my.cnf /etc/mysql/my.cnf"
+    cfg.vm.provision :shell, :inline => "sudo service mysql start"
 
     # Provider-specific configuration for VirtualBox:
     cfg.vm.provider :virtualbox do |vb|
@@ -189,12 +201,11 @@ Vagrant.configure("2") do |config|
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
     cfg.vm.network :private_network, ip: "192.168.131.102"
+    cfg.vm.provision :shell, :inline => "sudo ln -fs /vagrant/vagrant/prod/hosts /etc/hosts"
 
     # Provision puppet modules
     cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
-    #Unzip & Curl seems to not be installed. Hacked
-    cfg.vm.provision :shell, :inline => "sudo apt-get -y install unzip"
-    cfg.vm.provision :shell, :inline => "sudo apt-get -y install curl"
+    cfg.vm.provision :shell, :inline => $curl_unzip
 
    # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future
     # More information in: https://github.com/mitchellh/vagrant/pull/2677
@@ -202,7 +213,7 @@ Vagrant.configure("2") do |config|
     # Puppet provisioning
     cfg.vm.provision :puppet do |puppet|
       puppet.manifests_path = "puppet/manifests"
-#      puppet.module_path = "puppet/modules"
+      #puppet.module_path = "puppet/modules"
       puppet.options        = '--modulepath "/etc/puppet/modules:/tmp/vagrant-puppet-1/modules-0"'
       puppet.manifest_file = "site.pp"
     end

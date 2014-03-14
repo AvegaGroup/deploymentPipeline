@@ -137,17 +137,22 @@ node /prodlb/ inherits basenode {
 
 }
 
-node /prod/ inherits basenode {
+node /prod1/ inherits basenode {
         include "jre7"
 
     class { '::mysql::server':
         root_password  => 'mysecret_ci',
+        override_options => {
+            'mysqld' => {
+                'bind-address' => '192.168.131.101'
+            }
+         }
     }
 
     mysql::db { 'petclinic':
         user     => 'pc',
         password => 'mac',
-        host     => 'localhost',
+        host     => '%',
         grant    => ['all'],
     }
 
@@ -168,17 +173,6 @@ node /prod/ inherits basenode {
 
 node /prod2/ inherits basenode {
 include "jre7"
-
-    class { '::mysql::server':
-        root_password  => 'mysecret_ci',
-    }
-
-    mysql::db { 'petclinic':
-        user     => 'pc',
-        password => 'mac',
-        host     => 'localhost',
-        grant    => ['all'],
-    }
 
     package { 'tomcat7' :
         ensure  => present,
