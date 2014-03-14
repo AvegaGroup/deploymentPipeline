@@ -1,0 +1,14 @@
+127.0.0.1	localhost
+192.168.131.100  prod prod
+192.168.131.101  prod1 prod1
+192.168.131.101  db db
+192.168.131.102  prod2 prod2
+192.168.129.100  ci1 ci1
+192.168.129.100  artifactory artifactory
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
