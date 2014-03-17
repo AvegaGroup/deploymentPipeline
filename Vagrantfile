@@ -5,7 +5,7 @@ $script_lb = <<SCRIPT
     echo Provisioning VM...
     echo Installing dependencies...
     apt-get update
-    apt-get -qy install haproxy
+    apt-get -qy install haproxy=1.4.18-0ubuntu1.2
     echo Configuring haproxy...
     echo                                                      >> /etc/haproxy/haproxy.cfg
     echo "frontend http-in"                                   >> /etc/haproxy/haproxy.cfg
@@ -28,8 +28,8 @@ SCRIPT
 
 $curl_unzip = <<SCRIPT
     echo "Install curl and unzip"
-    sudo apt-get -y install curl
-    sudo apt-get -y install unzip
+    sudo apt-get -y install curl=7.22.0-3ubuntu4.7
+    sudo apt-get -y install unzip=6.0-4ubuntu2
 SCRIPT
 
 
@@ -176,9 +176,9 @@ Vagrant.configure("2") do |config|
     end
 
     #Configure Mysql to allow incoming network connections
-    cfg.vm.provision :shell, :inline => "sudo service mysql stop"
+    #cfg.vm.provision :shell, :inline => "sudo service mysql stop"
     #cfg.vm.provision :shell, :inline => "sudo ln -fs /vagrant/vagrant/my.cnf /etc/mysql/my.cnf"
-    cfg.vm.provision :shell, :inline => "sudo service mysql start"
+    #cfg.vm.provision :shell, :inline => "sudo service mysql start"
 
     # Provider-specific configuration for VirtualBox:
     cfg.vm.provider :virtualbox do |vb|
