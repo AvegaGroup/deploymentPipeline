@@ -1,9 +1,10 @@
 127.0.0.1	localhost
 192.168.131.100  prod prod
 192.168.131.101  prod1 prod1
+192.168.131.101  db db
 192.168.131.102  prod2 prod2
 192.168.130.100	 test1 test1
-192.168.129.100  ci1 ci1
+192.168.129.100  jenkins jenkins
 192.168.129.100  artifactory artifactory
 
 # The following lines are desirable for IPv6 capable hosts

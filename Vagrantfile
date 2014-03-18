@@ -45,11 +45,11 @@ Vagrant.configure("2") do |config|
   config.vm.box = "precise64"
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"  
 
-  # CI Machine
-  config.vm.define :ci do |cfg|
+  # JENKINS Machine
+  config.vm.define :jenkins1 do |cfg|
     cfg.vm.box = "precise64"
 
-    cfg.vm.hostname = "ci1"
+    cfg.vm.hostname = "jenkins1"
 
     # Jenkins
     cfg.vm.network :forwarded_port, guest: 8080, host: 18080
@@ -175,10 +175,9 @@ Vagrant.configure("2") do |config|
       puppet.manifest_file = "site.pp"
     end
 
-    #Configure Mysql to allow incoming network connections
-    #cfg.vm.provision :shell, :inline => "sudo service mysql stop"
-    #cfg.vm.provision :shell, :inline => "sudo ln -fs /vagrant/vagrant/my.cnf /etc/mysql/my.cnf"
-    #cfg.vm.provision :shell, :inline => "sudo service mysql start"
+    #stop and start Mysql to allow incoming network connections to hostname db
+    cfg.vm.provision :shell, :inline => "sudo service mysql stop"
+    cfg.vm.provision :shell, :inline => "sudo service mysql start"
 
     # Provider-specific configuration for VirtualBox:
     cfg.vm.provider :virtualbox do |vb|

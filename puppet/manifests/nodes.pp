@@ -17,14 +17,12 @@ node basenode {
 node default inherits basenode {    
 }
 
-node /ci/ inherits basenode {
+node /jenkins1/ inherits basenode {
   include "jdk7"
   include "maven3"
   include "jenkins"
   include "artifactory"
   include "apt"
-
-
 
   package { 'git':
     ensure   => present,
