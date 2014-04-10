@@ -9,6 +9,7 @@ $script_go = <<SCRIPT
     apt-get update
     apt-get install -y unzip
     apt-get install -y curl
+    apt-get install -y maven
     curl http://download01.thoughtworks.com/go/13.4.1/ga/go-server-13.4.1-18342.deb >godeb.deb
     curl http://download01.thoughtworks.com/go/13.4.1/ga/go-agent-13.4.1-18342.deb > godeb_agent.deb
     sudo dpkg -i godeb.deb
