@@ -36,7 +36,7 @@ SCRIPT
         # Provision puppet modules
         cfg.vm.provision :shell, :path => "../../vagrant/install-modules.sh"
         #Ensure CI environment knows of test and prod instances
-        #cfg.vm.provision :shell, :inline => "sudo ln -fs /vagrant/vagrant/hosts /etc/hosts"
+        #cfg.vm.provision :shell, :inline => "sudo cp -f /vagrant/vagrant/hosts /etc/hosts"
 
         # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future
         # More information in: https://github.com/mitchellh/vagrant/pull/2677
