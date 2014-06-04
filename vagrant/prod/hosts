@@ -1,9 +1,9 @@
 127.0.0.1	localhost
 192.168.131.100  prodlb prodlb
+192.168.131.100  db db
 192.168.131.101  prod1 prod1
-192.168.131.101  db db
 192.168.131.102  prod2 prod2
-192.168.129.100  artifactory artifactory
+192.168.129.101  artifactory artifactory
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback

@@ -28,8 +28,8 @@ SCRIPT
 
 $curl_unzip = <<SCRIPT
     echo "Install curl and unzip"
-    sudo apt-get -y install curl=7.22.0-3ubuntu4.7
-    sudo apt-get -y install unzip=6.0-4ubuntu2
+    sudo apt-get -y install curl
+    sudo apt-get -y install unzip
 SCRIPT
 
 
@@ -53,9 +53,6 @@ Vagrant.configure("2") do |config|
 
     # Jenkins
     cfg.vm.network :forwarded_port, guest: 8080, host: 18080
-
-    # Artifactory
-    cfg.vm.network :forwarded_port, guest: 8081, host: 18081
 
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
@@ -84,12 +81,13 @@ Vagrant.configure("2") do |config|
     # Provider-specific configuration for VirtualBox:
     cfg.vm.provider :virtualbox do |vb|
       # Use VBoxManage to customize the VM. For example to change memory:
-      vb.customize ["modifyvm", :id, "--memory", "2048"]
+      vb.customize ["modifyvm", :id, "--memory", "1048"]
       # Fix for problem with NAT-DNS in fault version of VirtualBox at Ubuntu 12.10
       # see https://www.virtualbox.org/ticket/10864
       vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     end
   end
+
   # TEST machine
   config.vm.define :test do |cfg|
     cfg.vm.box = "precise64"
@@ -130,24 +128,44 @@ Vagrant.configure("2") do |config|
     end
   end
 
+# prodln now also includes production DB and artifactory
  config.vm.define :prodlb do |cfg|
         cfg.vm.box = "precise64"
         cfg.vm.hostname = "prodlb"
 
+
         cfg.vm.network :private_network, ip: "192.168.131.100"
+
+        # Artifactory
         cfg.vm.provision :shell, :inline => "sudo cp -f  /vagrant/vagrant/prod/hosts /etc/hosts"
 
         cfg.vm.provision :shell, :inline => $script_lb
         cfg.vm.network "forwarded_port", guest: 9000, host: 9000
-        cfg.vm.provider "virtualbox" do |vm|
-          vm.customize [
-                     'modifyvm', :id,
-                     '--memory', '512'
-                 ]
-        end
-    end
+        cfg.vm.network :forwarded_port, guest: 8081, host: 18081
 
- config.vm.define :prod1 do |cfg|
+        # Provision puppet modules
+        cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
+        config.vm.synced_folder './puppet/modules', '/tmp/vagrant-puppet-1/modules-0'
+
+        # Puppet provisioning
+        cfg.vm.provision :puppet do |puppet|
+          puppet.manifests_path = "puppet/manifests"
+          puppet.options        = '--modulepath "/etc/puppet/modules:/tmp/vagrant-puppet-1/modules-0"'
+          puppet.manifest_file = "site.pp"
+        end
+
+        cfg.vm.provider "virtualbox" do |vm|
+          vm.customize ['modifyvm', :id, '--memory', '1536']
+          vm.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        end
+
+
+        #stop and start Mysql to allow incoming network connections to hostname db
+        cfg.vm.provision :shell, :inline => "sudo service mysql stop"
+        cfg.vm.provision :shell, :inline => "sudo service mysql start"
+  end
+
+  config.vm.define :prod1 do |cfg|
     cfg.vm.box = "precise64"
 
     cfg.vm.hostname = "prod1"
@@ -164,20 +182,16 @@ Vagrant.configure("2") do |config|
     cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
     cfg.vm.provision :shell, :inline => $curl_unzip
 
-   # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future
+    # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future
     # More information in: https://github.com/mitchellh/vagrant/pull/2677
     config.vm.synced_folder './puppet/modules', '/tmp/vagrant-puppet-1/modules-0'
     # Puppet provisioning
     cfg.vm.provision :puppet do |puppet|
       puppet.manifests_path = "puppet/manifests"
-#      puppet.module_path = "puppet/modules"
+      #puppet.module_path = "puppet/modules"
       puppet.options        = '--modulepath "/etc/puppet/modules:/tmp/vagrant-puppet-1/modules-0"'
       puppet.manifest_file = "site.pp"
     end
-
-    #stop and start Mysql to allow incoming network connections to hostname db
-    cfg.vm.provision :shell, :inline => "sudo service mysql stop"
-    cfg.vm.provision :shell, :inline => "sudo service mysql start"
 
     # Provider-specific configuration for VirtualBox:
     cfg.vm.provider :virtualbox do |vb|

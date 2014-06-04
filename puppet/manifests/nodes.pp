@@ -4,6 +4,7 @@ node basenode {
   class { '::ntp':
     servers => [ 'ntp1.sp.se', 'ntp2.sp.se' ],
   }
+
   class { 'timezone':
     timezone => 'Europe/Stockholm',
     autoupgrade => true,
@@ -11,7 +12,6 @@ node basenode {
   class { 'sudo':
     config_file_replace => false,
   }
-
 }
 
 node default inherits basenode {    
@@ -21,7 +21,6 @@ node /jenkins1/ inherits basenode {
   include "jdk7"
   include "maven3"
   include "jenkins"
-  include "artifactory"
   include "apt"
 
   package { 'git':
@@ -67,18 +66,20 @@ node /jenkins1/ inherits basenode {
   }
    
   
-# Directory for ssh conf
+  # Directory for ssh conf
   file { "/root/.ssh" :
     ensure => "directory",
     owner  => "root",
     group  => "root",
     mode   => 700,
   }
-# File for ssh 
+
+  # File for ssh 
   file { "/root/.ssh/config" :
     ensure => "present",
     content=> "Host *\nStrictHostKeyChecking no",
   }
+
   file { "/root/.ssh/id_rsa" :
     ensure => "present",
     owner  => "root",
@@ -103,101 +104,112 @@ node /go/ inherits basenode {
 }
 
 node /test/ inherits basenode {
-    include "jre7"
+  include "jre7"
 
-    class { '::mysql::server':
-        root_password  => 'mysecret_ci',
-    }
+  class { '::mysql::server':
+      root_password  => 'mysecret_ci',
+  }
 
-    mysql::db { 'petclinic':
-           user     => 'pc',
-           password => 'mac',
-           host     => 'localhost',
-           grant    => ['all'],
-       }
+  mysql::db { 'petclinic':
+         user     => 'pc',
+         password => 'mac',
+         host     => 'localhost',
+         grant    => ['all'],
+     }
 
-    mysql::db { 'goldenzone-prod':
-        user     => 'test',
-        password => 'test',
-        host     => 'localhost',
-        grant    => ['all'],
-    }
+  mysql::db { 'goldenzone-prod':
+      user     => 'test',
+      password => 'test',
+      host     => 'localhost',
+      grant    => ['all'],
+  }
 
-    package { 'tomcat7' :
-        ensure  => present,
-        provider=> 'apt'
-    }
+  package { 'tomcat7' :
+      ensure  => present,
+      provider=> 'apt'
+  }
 
-    ssh_authorized_key { 'cisshkey' :
-        ensure  => present,
-        key     => "AAAAB3NzaC1yc2EAAAADAQABAAABAQDc/jMTnHbqJTFe0loBF2W2Rzdd9KaANSN91HZ7duqRkrVdLb/rpDedeflaxYbUo843PlkngjRHr4p9y0ikKqcxV1hQP7XKT0h9+4I0iJ6dFj+escI5TmjV5wntPqgGVlMlEeVNKX+fD/fiUSNvWYDJRZBnRQzjeKNl13pYosIruE1RbO8B/Ce/1NkKPP2iA3BD98mYazKSARQAsECMVJ1d5QWAeibJojWXsT1tqLsuI1OwASIEQy/294A1UKbI6eTclN49uFzXePLt2sXK9yxIgWOFyKaZkUfB+JGCA1b2yV5KBdzAJge9zE+o69/pYUpW0vCYGLdChZhu0KyiPTuT",
-        name    => "root@CI",
-        type    => "ssh-rsa",
-        user    => "root",
-    }
+  ssh_authorized_key { 'cisshkey' :
+      ensure  => present,
+      key     => "AAAAB3NzaC1yc2EAAAADAQABAAABAQDc/jMTnHbqJTFe0loBF2W2Rzdd9KaANSN91HZ7duqRkrVdLb/rpDedeflaxYbUo843PlkngjRHr4p9y0ikKqcxV1hQP7XKT0h9+4I0iJ6dFj+escI5TmjV5wntPqgGVlMlEeVNKX+fD/fiUSNvWYDJRZBnRQzjeKNl13pYosIruE1RbO8B/Ce/1NkKPP2iA3BD98mYazKSARQAsECMVJ1d5QWAeibJojWXsT1tqLsuI1OwASIEQy/294A1UKbI6eTclN49uFzXePLt2sXK9yxIgWOFyKaZkUfB+JGCA1b2yV5KBdzAJge9zE+o69/pYUpW0vCYGLdChZhu0KyiPTuT",
+      name    => "root@CI",
+      type    => "ssh-rsa",
+      user    => "root",
+  }
 
 }
 
 node /prodlb/ inherits basenode {
-
-}
-
-node /prod1/ inherits basenode {
-        include "jre7"
-
-    class { '::mysql::server':
+  include "jdk7"
+  include "artifactory"
+  include "apt"
+  class { '::mysql::server':
         root_password  => 'mysecret_ci',
         override_options => {
             'mysqld' => {
-                'bind-address' => '192.168.131.101'
+                'bind-address' => '192.168.131.100'
             }
          }
     }
 
-    mysql::db { 'petclinic':
-        user     => 'pc',
-        password => 'mac',
-        host     => '%',
-        grant    => ['all'],
-    }
 
-    mysql::db { 'goldenzone-prod':
-        user     => 'test',
-        password => 'test',
-        host     => '%',
-        grant    => ['all'],
-    }
+  mysql::db { 'petclinic':
+      user     => 'pc',
+      password => 'mac',
+      host     => '%',
+      grant    => ['all'],
+  }
 
-    package { 'tomcat7' :
-        ensure  => present,
-        provider=> 'apt'
-    }
+  mysql::db { 'goldenzone-prod':
+      user     => 'test',
+      password => 'test',
+      host     => '%',
+      grant    => ['all'],
+  }
 
-    ssh_authorized_key { 'cisshkey' :
-        ensure  => present,
-        key     => "AAAAB3NzaC1yc2EAAAADAQABAAABAQDc/jMTnHbqJTFe0loBF2W2Rzdd9KaANSN91HZ7duqRkrVdLb/rpDedeflaxYbUo843PlkngjRHr4p9y0ikKqcxV1hQP7XKT0h9+4I0iJ6dFj+escI5TmjV5wntPqgGVlMlEeVNKX+fD/fiUSNvWYDJRZBnRQzjeKNl13pYosIruE1RbO8B/Ce/1NkKPP2iA3BD98mYazKSARQAsECMVJ1d5QWAeibJojWXsT1tqLsuI1OwASIEQy/294A1UKbI6eTclN49uFzXePLt2sXK9yxIgWOFyKaZkUfB+JGCA1b2yV5KBdzAJge9zE+o69/pYUpW0vCYGLdChZhu0KyiPTuT",
-        name    => "root@CI",
-        type    => "ssh-rsa",
-        user    => "root",
-    }
+  ssh_authorized_key { 'cisshkey' :
+      ensure  => present,
+      key     => "AAAAB3NzaC1yc2EAAAADAQABAAABAQDc/jMTnHbqJTFe0loBF2W2Rzdd9KaANSN91HZ7duqRkrVdLb/rpDedeflaxYbUo843PlkngjRHr4p9y0ikKqcxV1hQP7XKT0h9+4I0iJ6dFj+escI5TmjV5wntPqgGVlMlEeVNKX+fD/fiUSNvWYDJRZBnRQzjeKNl13pYosIruE1RbO8B/Ce/1NkKPP2iA3BD98mYazKSARQAsECMVJ1d5QWAeibJojWXsT1tqLsuI1OwASIEQy/294A1UKbI6eTclN49uFzXePLt2sXK9yxIgWOFyKaZkUfB+JGCA1b2yV5KBdzAJge9zE+o69/pYUpW0vCYGLdChZhu0KyiPTuT",
+      name    => "root@CI",
+      type    => "ssh-rsa",
+      user    => "root",
+  }
+
+}
+
+node /prod1/ inherits basenode {
+  include "jre7"
+
+  package { 'tomcat7' :
+      ensure  => present,
+      provider=> 'apt'
+  }
+
+  ssh_authorized_key { 'cisshkey' :
+      ensure  => present,
+      key     => "AAAAB3NzaC1yc2EAAAADAQABAAABAQDc/jMTnHbqJTFe0loBF2W2Rzdd9KaANSN91HZ7duqRkrVdLb/rpDedeflaxYbUo843PlkngjRHr4p9y0ikKqcxV1hQP7XKT0h9+4I0iJ6dFj+escI5TmjV5wntPqgGVlMlEeVNKX+fD/fiUSNvWYDJRZBnRQzjeKNl13pYosIruE1RbO8B/Ce/1NkKPP2iA3BD98mYazKSARQAsECMVJ1d5QWAeibJojWXsT1tqLsuI1OwASIEQy/294A1UKbI6eTclN49uFzXePLt2sXK9yxIgWOFyKaZkUfB+JGCA1b2yV5KBdzAJge9zE+o69/pYUpW0vCYGLdChZhu0KyiPTuT",
+      name    => "root@CI",
+      type    => "ssh-rsa",
+      user    => "root",
+  }
 }
 
 
 node /prod2/ inherits basenode {
-include "jre7"
+  include "jre7"
 
-    package { 'tomcat7' :
-        ensure  => present,
-        provider=> 'apt'
-    }
+  package { 'tomcat7' :
+      ensure  => present,
+      provider=> 'apt'
+  }
 
-    ssh_authorized_key { 'cisshkey' :
-        ensure  => present,
-        key     => "AAAAB3NzaC1yc2EAAAADAQABAAABAQDc/jMTnHbqJTFe0loBF2W2Rzdd9KaANSN91HZ7duqRkrVdLb/rpDedeflaxYbUo843PlkngjRHr4p9y0ikKqcxV1hQP7XKT0h9+4I0iJ6dFj+escI5TmjV5wntPqgGVlMlEeVNKX+fD/fiUSNvWYDJRZBnRQzjeKNl13pYosIruE1RbO8B/Ce/1NkKPP2iA3BD98mYazKSARQAsECMVJ1d5QWAeibJojWXsT1tqLsuI1OwASIEQy/294A1UKbI6eTclN49uFzXePLt2sXK9yxIgWOFyKaZkUfB+JGCA1b2yV5KBdzAJge9zE+o69/pYUpW0vCYGLdChZhu0KyiPTuT",
-        name    => "root@CI",
-        type    => "ssh-rsa",
-        user    => "root",
-    }
+  ssh_authorized_key { 'cisshkey' :
+      ensure  => present,
+      key     => "AAAAB3NzaC1yc2EAAAADAQABAAABAQDc/jMTnHbqJTFe0loBF2W2Rzdd9KaANSN91HZ7duqRkrVdLb/rpDedeflaxYbUo843PlkngjRHr4p9y0ikKqcxV1hQP7XKT0h9+4I0iJ6dFj+escI5TmjV5wntPqgGVlMlEeVNKX+fD/fiUSNvWYDJRZBnRQzjeKNl13pYosIruE1RbO8B/Ce/1NkKPP2iA3BD98mYazKSARQAsECMVJ1d5QWAeibJojWXsT1tqLsuI1OwASIEQy/294A1UKbI6eTclN49uFzXePLt2sXK9yxIgWOFyKaZkUfB+JGCA1b2yV5KBdzAJge9zE+o69/pYUpW0vCYGLdChZhu0KyiPTuT",
+      name    => "root@CI",
+      type    => "ssh-rsa",
+      user    => "root",
+  }
 }
 
 import "puppetmaster.pp"
