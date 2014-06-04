@@ -110,8 +110,15 @@ node /test/ inherits basenode {
     }
 
     mysql::db { 'petclinic':
-        user     => 'pc',
-        password => 'mac',
+           user     => 'pc',
+           password => 'mac',
+           host     => 'localhost',
+           grant    => ['all'],
+       }
+
+    mysql::db { 'goldenzone-prod':
+        user     => 'test',
+        password => 'test',
         host     => 'localhost',
         grant    => ['all'],
     }
@@ -150,6 +157,13 @@ node /prod1/ inherits basenode {
     mysql::db { 'petclinic':
         user     => 'pc',
         password => 'mac',
+        host     => '%',
+        grant    => ['all'],
+    }
+
+    mysql::db { 'goldenzone-prod':
+        user     => 'test',
+        password => 'test',
         host     => '%',
         grant    => ['all'],
     }

@@ -7,19 +7,19 @@ $script_lb = <<SCRIPT
     apt-get update
     apt-get -qy install haproxy=1.4.18-0ubuntu1.2
     echo Configuring haproxy...
-    echo                                                      >> /etc/haproxy/haproxy.cfg
-    echo "frontend http-in"                                   >> /etc/haproxy/haproxy.cfg
-    echo "        bind *:9000"                                >> /etc/haproxy/haproxy.cfg
-    echo "        default_backend servers"                    >> /etc/haproxy/haproxy.cfg
-    echo                                                      >> /etc/haproxy/haproxy.cfg
-    echo "backend servers"                                    >> /etc/haproxy/haproxy.cfg
-    echo "        stats enable"                               >> /etc/haproxy/haproxy.cfg
-    echo "        retries 3"                                  >> /etc/haproxy/haproxy.cfg
-    echo "        option redispatch"                          >> /etc/haproxy/haproxy.cfg
-    echo "        option httpchk"                             >> /etc/haproxy/haproxy.cfg
-    echo "        option forwardfor"                          >> /etc/haproxy/haproxy.cfg
-    echo "        option http-server-close"                   >> /etc/haproxy/haproxy.cfg
-    echo "        server prod 10.0.2.2:18001 check inter 1000" >> /etc/haproxy/haproxy.cfg
+    echo                                                        >> /etc/haproxy/haproxy.cfg
+    echo "frontend http-in"                                     >> /etc/haproxy/haproxy.cfg
+    echo "        bind *:9000"                                  >> /etc/haproxy/haproxy.cfg
+    echo "        default_backend servers"                      >> /etc/haproxy/haproxy.cfg
+    echo                                                        >> /etc/haproxy/haproxy.cfg
+    echo "backend servers"                                      >> /etc/haproxy/haproxy.cfg
+    echo "        stats enable"                                 >> /etc/haproxy/haproxy.cfg
+    echo "        retries 3"                                    >> /etc/haproxy/haproxy.cfg
+    echo "        option redispatch"                            >> /etc/haproxy/haproxy.cfg
+    echo "        option httpchk"                               >> /etc/haproxy/haproxy.cfg
+    echo "        option forwardfor"                            >> /etc/haproxy/haproxy.cfg
+    echo "        option http-server-close"                     >> /etc/haproxy/haproxy.cfg
+    echo "        server prod 10.0.2.2:18001 check inter 1000"  >> /etc/haproxy/haproxy.cfg
     echo "        server prod2 10.0.2.2:18002 check inter 1000" >> /etc/haproxy/haproxy.cfg
     echo "ENABLED=1" > /etc/default/haproxy
     service haproxy restart
@@ -64,7 +64,7 @@ Vagrant.configure("2") do |config|
     # Provision puppet modules
     cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
     #Ensure CI environment knows of test and prod instances
-    cfg.vm.provision :shell, :inline => "sudo ln -fs /vagrant/vagrant/hosts /etc/hosts"
+    cfg.vm.provision :shell, :inline => "sudo cp -f  /vagrant/vagrant/hosts /etc/hosts"
     cfg.vm.provision :shell, :inline => $curl_unzip
 
     # Ugly workaround to handle changed behavior of vagrant 1.4.1 and future
@@ -105,7 +105,7 @@ Vagrant.configure("2") do |config|
 
     # Provision puppet modules
     cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
-    cfg.vm.provision :shell, :inline => "sudo ln -fs /vagrant/vagrant/test/hosts /etc/hosts"
+    cfg.vm.provision :shell, :inline => "sudo cp -f  /vagrant/vagrant/test/hosts /etc/hosts"
     cfg.vm.provision :shell, :inline => $curl_unzip
 
 
@@ -135,7 +135,7 @@ Vagrant.configure("2") do |config|
         cfg.vm.hostname = "prodlb"
 
         cfg.vm.network :private_network, ip: "192.168.131.100"
-        cfg.vm.provision :shell, :inline => "sudo ln -fs /vagrant/vagrant/prod/hosts /etc/hosts"
+        cfg.vm.provision :shell, :inline => "sudo cp -f  /vagrant/vagrant/prod/hosts /etc/hosts"
 
         cfg.vm.provision :shell, :inline => $script_lb
         cfg.vm.network "forwarded_port", guest: 9000, host: 9000
@@ -158,7 +158,7 @@ Vagrant.configure("2") do |config|
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
     cfg.vm.network :private_network, ip: "192.168.131.101"
-    cfg.vm.provision :shell, :inline => "sudo ln -fs /vagrant/vagrant/prod/hosts /etc/hosts"
+    cfg.vm.provision :shell, :inline => "sudo cp -f  /vagrant/vagrant/prod/hosts /etc/hosts"
 
     # Provision puppet modules
     cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
@@ -200,7 +200,7 @@ Vagrant.configure("2") do |config|
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
     cfg.vm.network :private_network, ip: "192.168.131.102"
-    cfg.vm.provision :shell, :inline => "sudo ln -fs /vagrant/vagrant/prod/hosts /etc/hosts"
+    cfg.vm.provision :shell, :inline => "sudo cp -f  /vagrant/vagrant/prod/hosts /etc/hosts"
 
     # Provision puppet modules
     cfg.vm.provision :shell, :path => "vagrant/install-modules.sh"
