@@ -1,5 +1,23 @@
 Deployment Pipeline
 ===================
+
+OBS!!
+
+Not updated any more, use:
+
+https://github.com/AvegaGroup/dockerApplicationServer 
+
+instead.
+
+Sincerely
+Mikael Sennerholm
+20141021
+
+
+Old info
+-----------------------
+
+
 This project will create ContiuousDelivery pipeline setup that you can run on a reasonably spec laptop.
 It will create three virtual machines (which need 2GB RAM in total) that build, test, deploy and host the spring-petclinic application.
 
